@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "185245724953",
+    "project_id": "arivon-92f66",
+    "storage_bucket": "arivon-92f66.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:185245724953:android:5cff05df3ab27c4f8d9588",
+        "android_client_info": {
+          "package_name": "com.example.arivon"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "185245724953-j805tlccgod72pgh49movg1h588iuchc.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.arivon",
+            "certificate_hash": "5156c1be961525f11be040630dbb22bec506cc76"
+          }
+        },
+        {
+          "client_id": "185245724953-516g2velg813lpd6pop7tuglcid6pjlg.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBcsvhrPeBdFwS45Sdiq0NKgUyTfJ0iOpc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "185245724953-516g2velg813lpd6pop7tuglcid6pjlg.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

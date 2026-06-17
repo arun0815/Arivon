@@ -1,0 +1,6 @@
+-keep class com.example.arivon.** { *; }
+-keep class io.flutter.** { *; }
+-keep class io.flutter.embedding.** { *; }
+-keep class io.flutter.embedding.android.** { *; }
+-keep class io.flutter.embedding.engine.** { *; }
+-dontwarn io.flutter.embedding.**

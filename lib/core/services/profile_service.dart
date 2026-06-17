@@ -1,0 +1,178 @@
+import 'dart:convert';
+import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
+
+class UserProfile {
+  final String userId;
+  final String name;
+  final String email;
+  final String? profileImg;
+  final String? department;
+  final String? semester;
+  final String? institute;
+  final String? dateOfBirth;
+  final String? selectedAvatar; // locally stored asset path
+
+  UserProfile({
+    required this.userId,
+    required this.name,
+    required this.email,
+    this.profileImg,
+    this.department,
+    this.semester,
+    this.institute,
+    this.dateOfBirth,
+    this.selectedAvatar,
+  });
+
+  factory UserProfile.fromJson(Map<String, dynamic> json) {
+    return UserProfile(
+      userId:         json['userId'] ?? '',
+      name:           json['name'] ?? '',
+      email:          json['email'] ?? '',
+      profileImg:     json['profileimg'],
+      department:     json['department'],
+      semester:       json['semester'],
+      institute:      json['institute'],
+      dateOfBirth:    json['dateOfBirth'],
+      selectedAvatar: json['selectedAvatar'], // from local cache
+    );
+  }
+
+  Map<String, dynamic> toJson() => {
+    'userId':        userId,
+    'name':          name,
+    'email':         email,
+    'profileimg':    profileImg,
+    'department':    department,
+    'semester':      semester,
+    'institute':     institute,
+    'dateOfBirth':   dateOfBirth,
+    'selectedAvatar': selectedAvatar,
+  };
+
+  // Copy with updated fields
+  UserProfile copyWith({
+    String? name,
+    String? profileImg,
+    String? department,
+    String? semester,
+    String? institute,
+    String? selectedAvatar,
+  }) {
+    return UserProfile(
+      userId:         this.userId,
+      name:           name         ?? this.name,
+      email:          this.email,
+      profileImg:     profileImg   ?? this.profileImg,
+      department:     department   ?? this.department,
+      semester:       semester     ?? this.semester,
+      institute:      institute    ?? this.institute,
+      dateOfBirth:    this.dateOfBirth,
+      selectedAvatar: selectedAvatar ?? this.selectedAvatar,
+    );
+  }
+
+  String get initial => name.isNotEmpty ? name[0].toUpperCase() : 'U';
+  String get firstName => name.split(' ').first;
+}
+
+class ProfileService {
+  static const String _baseUrl = 'https://eduhub-tau-rosy.vercel.app/api/profile';
+  static const String _cacheKey = 'cached_profile';
+  static const String _avatarKey = 'selected_avatar';
+
+  // ── Load from local cache (instant, on app open) ──────────────────────────
+  static Future<UserProfile?> loadCachedProfile() async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      final cached = prefs.getString(_cacheKey);
+      if (cached == null) return null;
+      final json = jsonDecode(cached) as Map<String, dynamic>;
+      // Merge saved avatar
+      json['selectedAvatar'] = prefs.getString(_avatarKey);
+      return UserProfile.fromJson(json);
+    } catch (e) {
+      return null;
+    }
+  }
+
+  // ── Save profile to local cache ───────────────────────────────────────────
+  static Future<void> _cacheProfile(UserProfile profile) async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.setString(_cacheKey, jsonEncode(profile.toJson()));
+    } catch (_) {}
+  }
+
+  // ── Save avatar selection locally ─────────────────────────────────────────
+  static Future<void> saveAvatar(String? assetPath) async {
+    final prefs = await SharedPreferences.getInstance();
+    if (assetPath == null) {
+      await prefs.remove(_avatarKey);
+    } else {
+      await prefs.setString(_avatarKey, assetPath);
+    }
+  }
+
+  // ── Fetch profile from API ────────────────────────────────────────────────
+  static Future<UserProfile?> fetchProfile() async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      final email = prefs.getString('user_email');
+      if (email == null || email.isEmpty) return null;
+
+      final response = await http.get(
+        Uri.parse('$_baseUrl?email=$email'),
+        headers: {'Content-Type': 'application/json'},
+      );
+      final data = jsonDecode(response.body);
+      if (data['success'] == true) {
+        final profile = UserProfile.fromJson(data['data']);
+        // Merge locally saved avatar
+        final avatar = prefs.getString(_avatarKey);
+        final merged = profile.copyWith(selectedAvatar: avatar);
+        // Cache it
+        await _cacheProfile(merged);
+        return merged;
+      }
+      return null;
+    } catch (e) {
+      return null;
+    }
+  }
+
+  // ── Update profile via API ────────────────────────────────────────────────
+  static Future<UserProfile?> updateProfile({
+    required String email,
+    String? name,
+    String? institute,
+    String? department,
+    String? semester,
+  }) async {
+    try {
+      final response = await http.put(
+        Uri.parse('$_baseUrl?email=$email'),
+        headers: {'Content-Type': 'application/json'},
+        body: jsonEncode({
+          if (name != null)       'name': name,
+          if (institute != null)  'institute': institute,
+          if (department != null) 'department': department,
+          if (semester != null)   'semester': semester,
+        }),
+      );
+      final data = jsonDecode(response.body);
+      if (data['success'] == true) {
+        final prefs = await SharedPreferences.getInstance();
+        final avatar = prefs.getString(_avatarKey);
+        final profile = UserProfile.fromJson(data['data'])
+            .copyWith(selectedAvatar: avatar);
+        await _cacheProfile(profile);
+        return profile;
+      }
+      return null;
+    } catch (e) {
+      return null;
+    }
+  }
+}

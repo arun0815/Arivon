@@ -1,0 +1,72 @@
+name: Arivon
+description: Smart Academic Companion for Students
+publish_to: 'none'
+version: 1.0.0+1
+
+environment:
+  sdk: '>=3.0.0 <4.0.0'
+
+dependencies:
+  flutter:
+    sdk: flutter
+  http: ^1.2.1
+  provider: ^6.1.2
+  firebase_messaging: ^15.0.0
+  flutter_local_notifications: ^17.0.0
+
+  path_provider: ^2.1.3
+
+  share_plus: ^10.0.0
+
+  # Fonts
+  google_fonts: ^6.2.1
+
+  # Navigation
+  go_router: ^13.2.0
+
+  # WebView
+  webview_flutter: ^4.7.0
+
+  # Auth
+  google_sign_in: ^6.2.1
+
+  # Local Storage
+  shared_preferences: ^2.2.3
+  hive_flutter: ^1.1.0
+
+  # Network
+  connectivity_plus: ^6.0.3
+
+  # Animations
+  flutter_animate: ^4.5.0
+
+  # Icons (optional, uses Material icons by default)
+  cupertino_icons: ^1.0.6
+
+  firebase_core: ^3.0.0
+  
+  # External Browser launcher 
+  url_launcher: ^6.3.0
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^3.0.0
+  hive_generator: ^2.0.1
+  build_runner: ^2.4.9
+  flutter_launcher_icons: ^0.14.4
+
+flutter_launcher_icons:
+  android: true
+  ios: true
+  image_path: "assets/logo/app_icon.png"
+  adaptive_icon_background: "#0F3DFF"
+  adaptive_icon_foreground: "assets/logo/app_icon.png"
+
+flutter:
+  uses-material-design: true
+  assets:
+    - assets/images/
+    - assets/avatars/
+    - assets/logo/app_icon.png
+    - assets/data/facts.json
