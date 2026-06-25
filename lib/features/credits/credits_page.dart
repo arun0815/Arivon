@@ -60,7 +60,7 @@ class _CreditsPageState extends State<CreditsPage> {
   //   "credits": 4
   // }
   static const String apiUrl =
-      'https://drive.google.com/uc?export=download&id=1jGVCHnOvN8_PncQjXSg4VDIv9ctBi5OL';
+      'https://raw.githubusercontent.com/arun0815/Arivon/refs/heads/main/assets/data/credits.json';
 
   @override
   void initState() {
