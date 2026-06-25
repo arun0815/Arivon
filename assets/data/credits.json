@@ -1,0 +1,519 @@
+[
+  {
+    "subject_code": "MA3151",
+    "subject_name": "Matrices and calculus",
+    "credits": 4,
+    "department": "GE"
+  },
+  {
+    "subject_code": "PH3151",
+    "subject_name": "Engineering Physics",
+    "credits": 3,
+    "department": "GE"
+  },
+  {
+    "subject_code": "CY3151",
+    "subject_name": "Engineering Chemistry",
+    "credits": 3,
+    "department": "GE"
+  },
+  {
+    "subject_code": "GE3151",
+    "subject_name": "Problem Solving And Python Programming",
+    "credits": 3,
+    "department": "GE"
+  },
+  {
+    "subject_code": "GE3152",
+    "subject_name": "Heritage of tamil",
+    "credits": 1,
+    "department": "GE"
+  },
+  {
+    "subject_code": "HS3152",
+    "subject_name": "Professional English 1",
+    "credits": 3,
+    "department": "GE"
+  },
+  {
+    "subject_code": "GE3171",
+    "subject_name": "Problem Solving And Python Programming Laboratory",
+    "credits": 2,
+    "department": "GE"
+  },
+  {
+    "subject_code": "BS3171",
+    "subject_name": "Physics And Chemistry Laboratory",
+    "credits": 2,
+    "department": "GE"
+  },
+  {
+    "subject_code": "GE3172",
+    "subject_name": "English Laboratory",
+    "credits": 1,
+    "department": "GE"
+  },
+  {
+    "subject_code": "HS3252",
+    "subject_name": "Professional English 2",
+    "credits": 2,
+    "department": "GE"
+  },
+  {
+    "subject_code": "MA3251",
+    "subject_name": "Statistic And Numerical Methods",
+    "credits": 4,
+    "department": "GE"
+  },
+  {
+    "subject_code": "PH3256",
+    "subject_name": "Physics For Information Science",
+    "credits": 3,
+    "department": "CSE"
+  },
+  {
+    "subject_code": "BE3251",
+    "subject_name": "Basic Electrical And Electronics Engineering",
+    "credits": 3,
+    "department": "GE"
+  },
+  {
+    "subject_code": "GE3251",
+    "subject_name": "Engineering Graphics",
+    "credits": 4,
+    "department": "MECH"
+  },
+  {
+    "subject_code": "CS3251",
+    "subject_name": "Programming in C",
+    "credits": 3,
+    "department": "CSE"
+  },
+  {
+    "subject_code": "GE3252",
+    "subject_name": "Tamils And Technology",
+    "credits": 1,
+    "department": "GE"
+  },
+  {
+    "subject_code": "GE3271",
+    "subject_name": "Engineering Practices Laboratory",
+    "credits": 2,
+    "department": "GE"
+  },
+  {
+    "subject_code": "CS3271",
+    "subject_name": "Programming in C Laboratory",
+    "credits": 2,
+    "department": "CSE"
+  },
+  {
+    "subject_code": "GE3272",
+    "subject_name": "Communication Laboratory",
+    "credits": 2,
+    "department": "GE"
+  },
+  {
+    "subject_code": "MA3354",
+    "subject_name": "Discrete Mathematics",
+    "credits": 4,
+    "department": "CSE"
+  },
+  {
+    "subject_code": "CS3351",
+    "subject_name": "Digital Principle And Computer Organization",
+    "credits": 1,
+    "department": "CSE"
+  },
+  {
+    "subject_code": "CS3352",
+    "subject_name": "Foundation Of Data Science",
+    "credits": 3,
+    "department": "CSE"
+  },
+  {
+    "subject_code": "CS3301",
+    "subject_name": "Data Structure",
+    "credits": 3,
+    "department": "CSE"
+  },
+  {
+    "subject_code": "CS3391",
+    "subject_name": "Object Oriented Programming",
+    "credits": 3,
+    "department": "CSE"
+  },
+  {
+    "subject_code": "CS3311",
+    "subject_name": "Data Structure Laboratory",
+    "credits": 1.5,
+    "department": "CSE"
+  },
+  {
+    "subject_code": "CS3381",
+    "subject_name": "Object Oriented Programming Laboratory",
+    "credits": 1.5,
+    "department": "CSE"
+  },
+  {
+    "subject_code": "CS3361",
+    "subject_name": "Data Science Laboratory",
+    "credits": 2,
+    "department": "CSE"
+  },
+  {
+    "subject_code": "GE3361",
+    "subject_name": "Professional Development",
+    "credits": 1,
+    "department": "GE"
+  },
+  {
+    "subject_code": "CS3452",
+    "subject_name": "Theory Of Computation",
+    "credits": 3,
+    "department": "CSE"
+  },
+  {
+    "subject_code": "CS3491",
+    "subject_name": "Artificial Intelligence And Machine Learning",
+    "credits": 4,
+    "department": "CSE"
+  },
+  {
+    "subject_code": "CS3492",
+    "subject_name": "Database Management System",
+    "credits": 3,
+    "department": "CSE"
+  },
+  {
+    "subject_code": "CS3401",
+    "subject_name": "Algorithms",
+    "credits": 4,
+    "department": "CSE"
+  },
+  {
+    "subject_code": "CS3451",
+    "subject_name": "Introduction To Operating System",
+    "credits": 3,
+    "department": "CSE"
+  },
+  {
+    "subject_code": "GE3451",
+    "subject_name": "Environmental Science And Sustainability",
+    "credits": 2,
+    "department": "GE"
+  },
+  {
+    "subject_code": "CS3461",
+    "subject_name": "Operating System Laboratory",
+    "credits": 1.5,
+    "department": "CSE"
+  },
+  {
+    "subject_code": "CS3481",
+    "subject_name": "Database Management System Laboratory",
+    "credits": 1.5,
+    "department": "CSE"
+  },
+  {
+    "subject_code": "CS3591",
+    "subject_name": "Computer Networks",
+    "credits": 4,
+    "department": "CSE"
+  },
+  {
+    "subject_code": "CS3501",
+    "subject_name": "Compiler Design",
+    "credits": 4,
+    "department": "CSE"
+  },
+  {
+    "subject_code": "CB3491",
+    "subject_name": "Cryptography And Cyber Security",
+    "credits": 3,
+    "department": "CSE"
+  },
+  {
+    "subject_code": "CS3551",
+    "subject_name": "Distributed Computing",
+    "credits": 3,
+    "department": "CSE"
+  },
+  {
+    "subject_code": "CCS375",
+    "subject_name": "Web Technologies",
+    "credits": 3,
+    "department": "CSE"
+  },
+  {
+    "subject_code": "CCS354",
+    "subject_name": "Network Security",
+    "credits": 3,
+    "department": "CSE"
+  },
+  {
+    "subject_code": "CCS341",
+    "subject_name": "Data Warehousing",
+    "credits": 3,
+    "department": "CSE"
+  },
+  {
+    "subject_code": "CCS352",
+    "subject_name": "Multimedia And Animation",
+    "credits": 3,
+    "department": "CSE"
+  },
+  {
+    "subject_code": "CCS356",
+    "subject_name": "Object Oriented Software Engineering",
+    "credits": 4,
+    "department": "CSE"
+  },
+  {
+    "subject_code": "CCS334",
+    "subject_name": "Big Data Analytics",
+    "credits": 3,
+    "department": "CSE"
+  },
+  {
+    "subject_code": "CS3691",
+    "subject_name": "Embedded Systems And IOT",
+    "credits": 4,
+    "department": "CSE"
+  },
+  {
+    "subject_code": "OBT351",
+    "subject_name": "Food Nutrition And Health",
+    "credits": 3,
+    "department": "GE"
+  },
+  {
+    "subject_code": "GE3752",
+    "subject_name": "Principle Of Management",
+    "credits": 3,
+    "department": "GE"
+  },
+  {
+    "subject_code": "GE3791",
+    "subject_name": "Human Values And Ethics",
+    "credits": 2,
+    "department": "GE"
+  },
+  {
+    "subject_code": "OG1352",
+    "subject_name": "Geographical Information System",
+    "credits": 3,
+    "department": "GE"
+  },
+  {
+    "subject_code": "OMG353",
+    "subject_name": "Democracy And Good Governance",
+    "credits": 3,
+    "department": "GE"
+  },
+  {
+    "subject_code": "MA3251",
+    "subject_name": "Statistics and Numerical Methods",
+    "credits": 4,
+    "department": "GE"
+  },
+  {
+    "subject_code": "PH3251",
+    "subject_name": "Materials Science",
+    "credits": 3,
+    "department": "GE"
+  },
+  
+  {
+    "subject_code": "BE3271",
+    "subject_name": "Basic Electrical and Electronics Engineering Laboratory",
+    "credits": 2,
+    "department": "GE"
+  },
+  {
+    "subject_code": "GE3272",
+    "subject_name": "Communication Laboratory Foreign Language",
+    "credits": 2,
+    "department": "GE"
+  },
+  {
+    "subject_code": "MA3351",
+    "subject_name": "Transforms and Partial Differential Equations",
+    "credits": 4,
+    "department": "GE"
+  },
+  {
+    "subject_code": "ME3351",
+    "subject_name": "Engineering Mechanics",
+    "credits": 3,
+    "department": "MECH"
+  },
+  {
+    "subject_code": "ME3391",
+    "subject_name": "Engineering Thermodynamics",
+    "credits": 3,
+    "department": "MECH"
+  },
+  {
+    "subject_code": "CE3391",
+    "subject_name": "Fluid Mechanics and Machinery",
+    "credits": 4,
+    "department": "MECH"
+  },
+  {
+    "subject_code": "ME3392",
+    "subject_name": "Engineering Materials and Metallurgy",
+    "credits": 3,
+    "department": "MECH"
+  },
+  {
+    "subject_code": "ME3393",
+    "subject_name": "Manufacturing Processes",
+    "credits": 3,
+    "department": "MECH"
+  },
+  {
+    "subject_code": "ME3381",
+    "subject_name": "Computer Aided Machine Drawing",
+    "credits": 2,
+    "department": "MECH"
+  },
+  {
+    "subject_code": "ME3382",
+    "subject_name": "Manufacturing Technology Laboratory",
+    "credits": 2,
+    "department": "MECH"
+  },
+  {
+    "subject_code": "ME3491",
+    "subject_name": "Theory of Machines",
+    "credits": 3,
+    "department": "MECH"
+  },
+  {
+    "subject_code": "ME3451",
+    "subject_name": "Thermal Engineering",
+    "credits": 4,
+    "department": "MECH"
+  },
+  {
+    "subject_code": "ME3492",
+    "subject_name": "Hydraulics and Pneumatics",
+    "credits": 3,
+    "department": "MECH"
+  },
+  {
+    "subject_code": "ME3493",
+    "subject_name": "Manufacturing Technology",
+    "credits": 3,
+    "department": "MECH"
+  },
+  {
+    "subject_code": "CE3491",
+    "subject_name": "Strength of Materials",
+    "credits": 3,
+    "department": "MECH"
+  },
+  {
+    "subject_code": "GE3451",
+    "subject_name": "Environmental Sciences and Sustainability",
+    "credits": 2,
+    "department": "GE"
+  },
+  {
+    "subject_code": "CE3481",
+    "subject_name": "Strength of Materials and Fluid Machinery Laboratory",
+    "credits": 2,
+    "department": "MECH"
+  },
+  {
+    "subject_code": "ME3461",
+    "subject_name": "Thermal Engineering Laboratory",
+    "credits": 2,
+    "department": "MECH"
+  },
+  {
+    "subject_code": "ME3591",
+    "subject_name": "Design of Machine Elements",
+    "credits": 4,
+    "department": "MECH"
+  },
+  {
+    "subject_code": "ME3592",
+    "subject_name": "Metrology and Measurements",
+    "credits": 3,
+    "department": "MECH"
+  },
+  {
+    "subject_code": "ME3511",
+    "subject_name": "Summer Internship",
+    "credits": 1,
+    "department": "GE"
+  },
+  {
+    "subject_code": "ME3581",
+    "subject_name": "Metrology and Dynamics Laboratory",
+    "credits": 2,
+    "department": "MECH"
+  },
+  {
+    "subject_code": "ME3691",
+    "subject_name": "Heat and Mass Transfer",
+    "credits": 4,
+    "department": "MECH"
+  },
+  {
+    "subject_code": "ME3681",
+    "subject_name": "CAD/CAM Laboratory",
+    "credits": 2,
+    "department": "MECH"
+  },
+  {
+    "subject_code": "ME3682",
+    "subject_name": "Heat Transfer Laboratory",
+    "credits": 2,
+    "department": "MECH"
+  },
+  {
+    "subject_code": "ME3791",
+    "subject_name": "Mechatronics and IoT",
+    "credits": 3,
+    "department": "MECH"
+  },
+  {
+    "subject_code": "ME3792",
+    "subject_name": "Computer Integrated Manufacturing",
+    "credits": 3,
+    "department": "MECH"
+  },
+  {
+    "subject_code": "GE3791",
+    "subject_name": "Human Values and Ethics",
+    "credits": 2,
+    "department": "GE"
+  },
+  {
+    "subject_code": "GE3792",
+    "subject_name": "Industrial Management",
+    "credits": 3,
+    "department": "MECH"
+  },
+  {
+    "subject_code": "ME3781",
+    "subject_name": "Mechatronics and IoT Laboratory",
+    "credits": 2,
+    "department": "MECH"
+  },
+  {
+    "subject_code": "ME3711",
+    "subject_name": "Summer Internship",
+    "credits": 1,
+    "department": "MECH"
+  },
+  {
+    "subject_code": "ME3811",
+    "subject_name": "Project Work / Internship",
+    "credits": 10,
+    "department": "MECH"
+  }
+]
