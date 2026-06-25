@@ -56,7 +56,7 @@ const _feedbacks = [
     rating: 4.5,
     content:
         'Really clean app. The result page redesign looks great and loads faster than the official portal during result day rush.',
-    imageUrl: 'https://unsplash.com/photos/man-in-black-suit-jacket-cqtw4QCfbQg',
+    imageUrl: 'https://images.unsplash.com/photo-1620510625142-b45cbb784397?q=80&w=386&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
   ),
   FeedbackEntry(
     name: 'Divya Sree',
@@ -64,7 +64,7 @@ const _feedbacks = [
     rating: 5,
     content:
         'Love the daily quote feature, it keeps me motivated. Also the cut-off calculator helped me a lot during admissions season.',
-    imageUrl: 'https://unsplash.com/photos/the-sun-is-setting-over-the-ocean-with-waves-Xa7u-1yF1yM',
+    imageUrl: 'https://plus.unsplash.com/premium_photo-1664121799890-b5605834b72a?q=80&w=387&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
   ),
   FeedbackEntry(
     name: 'Mohammed Aslam',
@@ -72,7 +72,7 @@ const _feedbacks = [
     rating: 4,
     content:
         'Notes section has everything I need before exams. Would be great to get notifications when new notes are uploaded.',
-    imageUrl: 'https://unsplash.com/photos/person-raising-their-left-hand-cgvsRkkuZIE',
+    imageUrl: 'https://images.unsplash.com/photo-1553658024-39485fea1f16?q=80&w=464&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
   ),
   FeedbackEntry(
     name: 'Sandhiya M',
@@ -80,7 +80,7 @@ const _feedbacks = [
     rating: 4.5,
     content:
         'As a first year student, the onboarding and dark mode are great touches. The app feels very polished for a student project.',
-    imageUrl: 'https://unsplash.com/illustrations/a-detailed-line-art-illustration-of-the-lunar-month-of-january-with-wolf-moon-on-a-constellation-background-FnihAQ6raUs',
+    imageUrl: 'https://plus.unsplash.com/premium_vector-1711987375329-6babe1ec0351?q=80&w=580&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
   ),
   FeedbackEntry(
     name: 'Arun Prasath',
@@ -88,7 +88,7 @@ const _feedbacks = [
     rating: 5,
     content:
         'The percentage and credit calculators are spot on with Anna University regulations. Saved me from manual calculation mistakes.',
-    imageUrl: 'https://unsplash.com/photos/man-in-white-hoodie-wearing-black-round-analog-watch-bodgc6H44FA',
+    imageUrl: 'https://images.unsplash.com/photo-1618641986557-1ecd230959aa?q=80&w=387&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
   ),
   FeedbackEntry(
     name: 'Lakshmi Narayanan',
@@ -96,7 +96,7 @@ const _feedbacks = [
     rating: 4,
     content:
         'Good app overall. Sometimes the result page takes a while to load during high traffic but it always works eventually.',
-    imageUrl: 'https://unsplash.com/photos/yellow-and-black-robot-toy-mou0S7ViElQ',
+    imageUrl: 'https://images.unsplash.com/photo-1593085512500-5d55148d6f0d?q=80&w=580&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
   ),
   FeedbackEntry(
     name: 'Nivetha R',
@@ -104,7 +104,7 @@ const _feedbacks = [
     rating: 5,
     content:
         'The notice board keeps me updated on exam schedules and circulars without having to check multiple WhatsApp groups.',
-    imageUrl: 'https://unsplash.com/photos/pink-haired-female-anime-character-action-figure-VURwPtZqyF4',
+    imageUrl: 'https://images.unsplash.com/photo-1578632767115-351597cf2477?q=80&w=387&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
   ),
   FeedbackEntry(
     name: 'Gokul Krishna',
@@ -120,7 +120,7 @@ const _feedbacks = [
     rating: 5,
     content:
         'Easily the best student app for Anna University students. Clean UI, fast, and exactly the tools we actually need.',
-    imageUrl: 'https://drive.google.com/file/d/1s_a3t46GH-lt-AWGp28LtSKB5cvsmDj-/view?usp=drivesdk',
+    imageUrl: 'https://i.pinimg.com/736x/36/90/3a/36903a763c4e9deaa8083dc7048a1454.jpg',
   ),
 ];
 
