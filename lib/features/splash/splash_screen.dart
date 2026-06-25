@@ -9,7 +9,6 @@ import 'package:provider/provider.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
-
   @override
   State<SplashScreen> createState() => _SplashScreenState();
 }
@@ -27,16 +26,13 @@ class _SplashScreenState extends State<SplashScreen> {
         options: DefaultFirebaseOptions.currentPlatform,
       );
       await NotificationService.initialize();
-
       if (mounted) {
         await context.read<ThemeProvider>().load();
       }
     } catch (e) {
       debugPrint('Init error: $e');
     }
-
     await Future.delayed(const Duration(milliseconds: 2500));
-
     if (!mounted) return;
     final route = await AppRouter.getInitialRoute();
     if (mounted) context.go(route);
@@ -47,10 +43,32 @@ class _SplashScreenState extends State<SplashScreen> {
     return Scaffold(
       backgroundColor: const Color(0xFF060E1E),
       body: Center(
-        child: Image.asset(
-          'assets/logo/app_icon.png',
-          width: 120,
-          height: 120,
+        child: Container(
+          width: 180,
+          height: 180,
+          padding: const EdgeInsets.all(24),
+          decoration: BoxDecoration(
+            color: Colors.white.withOpacity(0.04),
+            borderRadius: BorderRadius.circular(40),
+            border: Border.all(
+              color: Colors.white.withOpacity(0.08),
+              width: 1,
+            ),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withOpacity(0.35),
+                blurRadius: 30,
+                offset: const Offset(0, 14),
+              ),
+            ],
+          ),
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(24),
+            child: Image.asset(
+              'assets/logo/app_icon.png',
+              fit: BoxFit.contain,
+            ),
+          ),
         ),
       ),
     );
