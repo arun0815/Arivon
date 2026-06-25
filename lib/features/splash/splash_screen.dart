@@ -44,9 +44,8 @@ class _SplashScreenState extends State<SplashScreen> {
       backgroundColor: const Color(0xFF060E1E),
       body: Center(
         child: Container(
-          width: 180,
-          height: 180,
-          padding: const EdgeInsets.all(24),
+          width: 200,
+          height: 200,
           decoration: BoxDecoration(
             color: Colors.white.withOpacity(0.04),
             borderRadius: BorderRadius.circular(40),
@@ -63,10 +62,10 @@ class _SplashScreenState extends State<SplashScreen> {
             ],
           ),
           child: ClipRRect(
-            borderRadius: BorderRadius.circular(24),
+            borderRadius: BorderRadius.circular(40),
             child: Image.asset(
               'assets/logo/app_icon.png',
-              fit: BoxFit.contain,
+              fit: BoxFit.cover,
             ),
           ),
         ),
