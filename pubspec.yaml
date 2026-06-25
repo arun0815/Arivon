@@ -70,3 +70,4 @@ flutter:
     - assets/avatars/
     - assets/logo/app_icon.png
     - assets/data/facts.json
+    - assets/images/google_logo.png
