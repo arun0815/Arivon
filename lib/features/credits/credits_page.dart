@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import '../../../core/theme/app_colors.dart';
 
 class Subject {
   final String code;
@@ -48,6 +49,16 @@ class _CreditsPageState extends State<CreditsPage> {
   List<Subject> _subjects = [];
   bool _isLoading = true;
 
+  // ── Data source ────────────────────────────────────────────────────────
+  // Currently pointed at a Google Drive hosted JSON file. Swap this for your
+  // own endpoint once the dataset is finalized — the shape expected per
+  // subject is:
+  // {
+  //   "subject_code": "CS101",
+  //   "subject_name": "Programming Fundamentals",
+  //   "department": "CSE",
+  //   "credits": 4
+  // }
   static const String apiUrl =
       'https://drive.google.com/uc?export=download&id=1jGVCHnOvN8_PncQjXSg4VDIv9ctBi5OL';
 
@@ -97,7 +108,23 @@ class _CreditsPageState extends State<CreditsPage> {
     }).toList();
   }
 
-  Color _badgeColor(String dept) {
+  // ── Department badge colors (light / dark aware) ────────────────────────
+  Color _badgeColor(String dept, bool isDark) {
+    if (isDark) {
+      switch (dept) {
+        case 'CSE':
+        case 'ECE':
+          return const Color(0xFF3A2E1A);
+        case 'Mech':
+          return const Color(0xFF1E2A40);
+        case 'Civil':
+          return const Color(0xFF1B3326);
+        case 'EEE':
+          return const Color(0xFF3A1E30);
+        default:
+          return const Color(0xFF1E293B);
+      }
+    }
     switch (dept) {
       case 'CSE':
         return const Color(0xFFFFE3CC);
@@ -114,7 +141,22 @@ class _CreditsPageState extends State<CreditsPage> {
     }
   }
 
-  Color _badgeTextColor(String dept) {
+  Color _badgeTextColor(String dept, bool isDark) {
+    if (isDark) {
+      switch (dept) {
+        case 'CSE':
+        case 'ECE':
+          return const Color(0xFFF5A949);
+        case 'Mech':
+          return const Color(0xFF6FA3FF);
+        case 'Civil':
+          return const Color(0xFF5FD08C);
+        case 'EEE':
+          return const Color(0xFFF06FB8);
+        default:
+          return const Color(0xFF94A3B8);
+      }
+    }
     switch (dept) {
       case 'CSE':
       case 'ECE':
@@ -138,13 +180,23 @@ class _CreditsPageState extends State<CreditsPage> {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final bg     = isDark ? const Color(0xFF0F172A) : const Color(0xFFF7F8FA);
+    final card   = isDark ? const Color(0xFF1E293B) : Colors.white;
+    final tp     = isDark ? Colors.white : const Color(0xFF0F172A);
+    final ts     = isDark ? const Color(0xFF94A3B8) : Colors.grey;
+    final border = isDark ? const Color(0xFF334155) : Colors.grey.shade300;
+    final chipBg = isDark ? const Color(0xFF1E293B) : Colors.white;
+    final chipSelected =
+        isDark ? const Color(0xFF3730A3) : const Color(0xFFD9D9FB);
+
     return Scaffold(
-      backgroundColor: const Color(0xFFF7F8FA),
+      backgroundColor: bg,
       body: SafeArea(
         child: Column(
           children: [
             Container(
-              color: const Color(0xFFF7F8FA),
+              color: bg,
               padding: const EdgeInsets.fromLTRB(16, 8, 16, 12),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -153,17 +205,19 @@ class _CreditsPageState extends State<CreditsPage> {
                     children: [
                       IconButton(
                         onPressed: () => Navigator.pop(context),
-                        icon: const Icon(
+                        icon: Icon(
                           Icons.arrow_back_ios_new,
                           size: 20,
+                          color: tp,
                         ),
                       ),
                       const SizedBox(width: 4),
-                      const Text(
+                      Text(
                         'Credits',
                         style: TextStyle(
                           fontSize: 24,
                           fontWeight: FontWeight.w800,
+                          color: tp,
                         ),
                       ),
                     ],
@@ -172,11 +226,9 @@ class _CreditsPageState extends State<CreditsPage> {
 
                   Container(
                     decoration: BoxDecoration(
-                      color: Colors.white,
+                      color: card,
                       borderRadius: BorderRadius.circular(16),
-                      border: Border.all(
-                        color: Colors.grey.shade300,
-                      ),
+                      border: Border.all(color: border),
                     ),
                     child: TextField(
                       onChanged: (value) {
@@ -184,13 +236,14 @@ class _CreditsPageState extends State<CreditsPage> {
                           _query = value;
                         });
                       },
-                      decoration: const InputDecoration(
-                        hintText:
-                            'Search subject code or name...',
-                        prefixIcon: Icon(Icons.search),
+                      style: TextStyle(color: tp),
+                      decoration: InputDecoration(
+                        hintText: 'Search subject code or name...',
+                        hintStyle: TextStyle(color: ts),
+                        prefixIcon: Icon(Icons.search, color: ts),
                         border: InputBorder.none,
                         contentPadding:
-                            EdgeInsets.symmetric(vertical: 14),
+                            const EdgeInsets.symmetric(vertical: 14),
                       ),
                     ),
                   ),
@@ -206,20 +259,33 @@ class _CreditsPageState extends State<CreditsPage> {
                           const SizedBox(width: 8),
                       itemBuilder: (context, index) {
                         final dept = _departments[index];
-                        final selected =
-                            dept == _selectedDept;
+                        final selected = dept == _selectedDept;
 
                         return ChoiceChip(
-                          label: Text(dept),
+                          label: Text(
+                            dept,
+                            style: TextStyle(
+                              color: selected
+                                  ? (isDark ? Colors.white : Colors.black87)
+                                  : tp,
+                              fontWeight: selected
+                                  ? FontWeight.w700
+                                  : FontWeight.w500,
+                            ),
+                          ),
                           selected: selected,
                           onSelected: (_) {
                             setState(() {
                               _selectedDept = dept;
                             });
                           },
-                          selectedColor:
-                              const Color(0xFFD9D9FB),
-                          backgroundColor: Colors.white,
+                          selectedColor: chipSelected,
+                          backgroundColor: chipBg,
+                          side: BorderSide(
+                            color: selected
+                                ? Colors.transparent
+                                : border,
+                          ),
                         );
                       },
                     ),
@@ -231,114 +297,70 @@ class _CreditsPageState extends State<CreditsPage> {
             Expanded(
               child: _isLoading
                   ? const Center(
-                      child:
-                          CircularProgressIndicator(),
+                      child: CircularProgressIndicator(),
                     )
                   : _filtered.isEmpty
-                      ? const Center(
-                          child:
-                              Text('No subjects found'),
+                      ? Center(
+                          child: Text(
+                            'No subjects found',
+                            style: TextStyle(color: ts),
+                          ),
                         )
                       : ListView.separated(
-                          padding:
-                              const EdgeInsets.fromLTRB(
-                            16,
-                            4,
-                            16,
-                            16,
-                          ),
+                          padding: const EdgeInsets.fromLTRB(16, 4, 16, 16),
                           itemCount: _filtered.length,
                           separatorBuilder: (_, __) =>
-                              const SizedBox(
-                            height: 12,
-                          ),
-                          itemBuilder:
-                              (context, index) {
-                            final subject =
-                                _filtered[index];
+                              const SizedBox(height: 12),
+                          itemBuilder: (context, index) {
+                            final subject = _filtered[index];
 
                             return Container(
-                              padding:
-                                  const EdgeInsets.all(
-                                      16),
-                              decoration:
-                                  BoxDecoration(
-                                color: Colors.white,
-                                borderRadius:
-                                    BorderRadius
-                                        .circular(
-                                  18,
-                                ),
+                              padding: const EdgeInsets.all(16),
+                              decoration: BoxDecoration(
+                                color: card,
+                                borderRadius: BorderRadius.circular(18),
+                                border: Border.all(color: border),
                               ),
                               child: Row(
                                 children: [
                                   Container(
-                                    padding:
-                                        const EdgeInsets
-                                            .symmetric(
-                                      horizontal:
-                                          14,
-                                      vertical:
-                                          10,
+                                    padding: const EdgeInsets.symmetric(
+                                      horizontal: 14,
+                                      vertical: 10,
                                     ),
-                                    decoration:
-                                        BoxDecoration(
-                                      color:
-                                          _badgeColor(
-                                        subject
-                                            .department,
-                                      ),
+                                    decoration: BoxDecoration(
+                                      color: _badgeColor(
+                                          subject.department, isDark),
                                       borderRadius:
-                                          BorderRadius
-                                              .circular(
-                                        12,
-                                      ),
+                                          BorderRadius.circular(12),
                                     ),
                                     child: Text(
                                       subject.code,
-                                      style:
-                                          TextStyle(
-                                        fontWeight:
-                                            FontWeight
-                                                .w800,
-                                        color:
-                                            _badgeTextColor(
-                                          subject
-                                              .department,
-                                        ),
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.w800,
+                                        color: _badgeTextColor(
+                                            subject.department, isDark),
                                       ),
                                     ),
                                   ),
-                                  const SizedBox(
-                                      width: 14),
+                                  const SizedBox(width: 14),
                                   Expanded(
                                     child: Column(
                                       crossAxisAlignment:
-                                          CrossAxisAlignment
-                                              .start,
+                                          CrossAxisAlignment.start,
                                       children: [
                                         Text(
                                           subject.name,
-                                          style:
-                                              const TextStyle(
-                                            fontWeight:
-                                                FontWeight
-                                                    .w700,
-                                            fontSize:
-                                                16,
+                                          style: TextStyle(
+                                            fontWeight: FontWeight.w700,
+                                            fontSize: 16,
+                                            color: tp,
                                           ),
                                         ),
-                                        const SizedBox(
-                                            height:
-                                                4),
+                                        const SizedBox(height: 4),
                                         Text(
-                                          subject
-                                              .department,
-                                          style:
-                                              TextStyle(
-                                            color: Colors
-                                                .grey,
-                                          ),
+                                          subject.department,
+                                          style: TextStyle(color: ts),
                                         ),
                                       ],
                                     ),
@@ -346,21 +368,16 @@ class _CreditsPageState extends State<CreditsPage> {
                                   Column(
                                     children: [
                                       Text(
-                                        _formatCredit(
-                                          subject
-                                              .credit,
-                                        ),
-                                        style:
-                                            const TextStyle(
-                                          fontSize:
-                                              20,
-                                          fontWeight:
-                                              FontWeight
-                                                  .w800,
+                                        _formatCredit(subject.credit),
+                                        style: TextStyle(
+                                          fontSize: 20,
+                                          fontWeight: FontWeight.w800,
+                                          color: tp,
                                         ),
                                       ),
-                                      const Text(
+                                      Text(
                                         'Credits',
+                                        style: TextStyle(color: ts),
                                       ),
                                     ],
                                   ),
