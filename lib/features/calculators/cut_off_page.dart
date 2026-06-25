@@ -46,7 +46,8 @@ class _CutOffPageState extends State<CutOffPage> {
     if (maths == null || physics == null || chem == null) return;
 
     setState(() {
-      _result = (maths / 2) + (physics / 4) + (chem / 4);
+      // ── Corrected formula: (Maths + Physics + Chemistry) ÷ 3 ──────
+      _result = (maths + physics + chem) / 3;
     });
   }
 
@@ -147,7 +148,7 @@ class _CutOffPageState extends State<CutOffPage> {
                                   fontWeight: FontWeight.w700, fontSize: 12)),
                           const SizedBox(height: 2),
                           Text(
-                            'Maths÷2  +  Physics÷4  +  Chemistry÷4',
+                            '(Maths + Physics + Chemistry) ÷ 3',
                             style: TextStyle(
                                 color: Colors.white.withOpacity(0.85),
                                 fontSize: 12,
@@ -190,7 +191,6 @@ class _CutOffPageState extends State<CutOffPage> {
                       controller: _mathsCtrl,
                       error: _errors['maths'],
                       isDark: isDark,
-                      weightInfo: '÷ 2',
                       onChanged: (_) =>
                           setState(() => _errors['maths'] = null),
                     ),
@@ -203,7 +203,6 @@ class _CutOffPageState extends State<CutOffPage> {
                       controller: _physicsCtrl,
                       error: _errors['physics'],
                       isDark: isDark,
-                      weightInfo: '÷ 4',
                       onChanged: (_) =>
                           setState(() => _errors['physics'] = null),
                     ),
@@ -216,7 +215,6 @@ class _CutOffPageState extends State<CutOffPage> {
                       controller: _chemCtrl,
                       error: _errors['chem'],
                       isDark: isDark,
-                      weightInfo: '÷ 4',
                       onChanged: (_) =>
                           setState(() => _errors['chem'] = null),
                     ),
@@ -319,26 +317,33 @@ class _CutOffPageState extends State<CutOffPage> {
                         child: Column(
                           children: [
                             _BreakdownRow(
-                              label: 'Maths (÷2)',
-                              value: (double.parse(_mathsCtrl.text) / 2)
+                              label: 'Maths',
+                              value: double.parse(_mathsCtrl.text)
                                   .toStringAsFixed(2),
                               color: const Color(0xFF2563EB),
                               ts: ts,
                             ),
                             const SizedBox(height: 6),
                             _BreakdownRow(
-                              label: 'Physics (÷4)',
-                              value: (double.parse(_physicsCtrl.text) / 4)
+                              label: 'Physics',
+                              value: double.parse(_physicsCtrl.text)
                                   .toStringAsFixed(2),
                               color: const Color(0xFF7C3AED),
                               ts: ts,
                             ),
                             const SizedBox(height: 6),
                             _BreakdownRow(
-                              label: 'Chemistry (÷4)',
-                              value: (double.parse(_chemCtrl.text) / 4)
+                              label: 'Chemistry',
+                              value: double.parse(_chemCtrl.text)
                                   .toStringAsFixed(2),
                               color: const Color(0xFF059669),
+                              ts: ts,
+                            ),
+                            const SizedBox(height: 6),
+                            _BreakdownRow(
+                              label: 'Sum ÷ 3',
+                              value: _result!.toStringAsFixed(2),
+                              color: ts,
                               ts: ts,
                             ),
                             Divider(color: isDark
@@ -371,7 +376,7 @@ class _CutOffPageState extends State<CutOffPage> {
 
 // ─── Subject Input Field ──────────────────────────────────────────────────────
 class _SubjectField extends StatelessWidget {
-  final String label, weightInfo;
+  final String label;
   final IconData icon;
   final Color color;
   final TextEditingController controller;
@@ -386,7 +391,6 @@ class _SubjectField extends StatelessWidget {
     required this.controller,
     required this.error,
     required this.isDark,
-    required this.weightInfo,
     required this.onChanged,
   });
 
@@ -420,18 +424,6 @@ class _SubjectField extends StatelessWidget {
             Text(label,
                 style: TextStyle(fontSize: 12,
                     fontWeight: FontWeight.w600, color: tp)),
-            const Spacer(),
-            Container(
-              padding: const EdgeInsets.symmetric(
-                  horizontal: 8, vertical: 2),
-              decoration: BoxDecoration(
-                color: color.withOpacity(0.08),
-                borderRadius: BorderRadius.circular(6),
-              ),
-              child: Text(weightInfo,
-                  style: TextStyle(fontSize: 11,
-                      fontWeight: FontWeight.w700, color: color)),
-            ),
           ],
         ),
         const SizedBox(height: 6),
