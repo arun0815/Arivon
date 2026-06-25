@@ -36,7 +36,7 @@ class _FactPageState extends State<FactPage> {
     }
 
     // Load JSON and pick a new random fact
-    final jsonStr = await rootBundle.loadString('../../../assets/data/facts.json');
+    final jsonStr = await rootBundle.loadString('https://raw.githubusercontent.com/arun0815/Arivon/refs/heads/main/assets/data/facts.json');
     final data = json.decode(jsonStr);
     final List<dynamic> facts = data['facts'];
     final randomFact = facts[Random().nextInt(facts.length)] as String;
