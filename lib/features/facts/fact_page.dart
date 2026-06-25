@@ -44,6 +44,7 @@ class _FactPageState extends State<FactPage> {
     final savedDate = prefs.getString('fact_date');
     final savedFact = prefs.getString('fact_text');
 
+    // Already picked today's fact — show the same one, don't pick again.
     if (savedDate == today && savedFact != null) {
       setState(() {
         _fact = savedFact;
@@ -52,6 +53,7 @@ class _FactPageState extends State<FactPage> {
       return;
     }
 
+    List<String> facts;
     try {
       // ── Fetch the JSON over the network (NOT rootBundle — that's only
       // for assets bundled into the app, not remote URLs) ───────────────
@@ -64,31 +66,51 @@ class _FactPageState extends State<FactPage> {
       }
 
       final data = json.decode(response.body);
-      final List<dynamic> facts = data['facts'];
+      facts = (data['facts'] as List<dynamic>).cast<String>();
 
       if (facts.isEmpty) throw Exception('Facts list is empty');
-
-      final randomFact = facts[Random().nextInt(facts.length)] as String;
-
-      await prefs.setString('fact_date', today);
-      await prefs.setString('fact_text', randomFact);
-
-      setState(() {
-        _fact = randomFact;
-        _loading = false;
-      });
     } catch (e) {
       debugPrint('Fact load error: $e');
-
-      // Prefer yesterday's cached fact if we have one. Otherwise fall
-      // back to the built-in list so the page never shows a blank error
-      // state on a fresh install with no internet.
-      setState(() {
-        _fact = savedFact ??
-            _fallbackFacts[Random().nextInt(_fallbackFacts.length)];
-        _loading = false;
-      });
+      // No network / fetch failed — use yesterday's cached fact if we
+      // have one, otherwise fall back to the built-in list.
+      facts = _fallbackFacts;
+      if (savedFact != null && savedDate != null) {
+        setState(() {
+          _fact = savedFact;
+          _loading = false;
+        });
+        return;
+      }
     }
+
+    // ── Pick a fact that hasn't been shown yet in this cycle ───────────
+    final usedJson = prefs.getString('used_facts');
+    List<String> used =
+        usedJson != null ? List<String>.from(json.decode(usedJson)) : [];
+
+    // Drop any used facts that no longer exist in the current list
+    // (e.g. you removed one from facts.json), so they don't waste slots.
+    used = used.where((f) => facts.contains(f)).toList();
+
+    var available = facts.where((f) => !used.contains(f)).toList();
+
+    // Every fact has been shown — start a fresh cycle.
+    if (available.isEmpty) {
+      used = [];
+      available = facts;
+    }
+
+    final chosenFact = available[Random().nextInt(available.length)];
+    used.add(chosenFact);
+
+    await prefs.setString('fact_date', today);
+    await prefs.setString('fact_text', chosenFact);
+    await prefs.setString('used_facts', json.encode(used));
+
+    setState(() {
+      _fact = chosenFact;
+      _loading = false;
+    });
   }
 
   @override
