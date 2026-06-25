@@ -52,17 +52,14 @@ class _LoginScreenState extends State<LoginScreen>
     super.dispose();
   }
 
-  // ── FCM token helper ──────────────────────────────────────────────────────
   Future<String?> _getFcmToken() async {
     try {
       final messaging = FirebaseMessaging.instance;
-
       final settings = await messaging.requestPermission(
         alert: true,
         badge: true,
         sound: true,
       );
-
       if (settings.authorizationStatus == AuthorizationStatus.authorized ||
           settings.authorizationStatus == AuthorizationStatus.provisional) {
         return await messaging.getToken();
@@ -70,9 +67,8 @@ class _LoginScreenState extends State<LoginScreen>
     } catch (e) {
       debugPrint('FCM token error: $e');
     }
-    return null; // non-fatal — login still proceeds
+    return null;
   }
-  // ─────────────────────────────────────────────────────────────────────────
 
   Future<void> _handleGoogleSignIn() async {
     setState(() => _isLoading = true);
@@ -165,8 +161,8 @@ class _LoginScreenState extends State<LoginScreen>
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Container(
-                          width: 84,
-                          height: 84,
+                          width: 100,
+                          height: 100,
                           decoration: BoxDecoration(
                             color: isDark ? const Color(0xFF111B30) : Colors.white,
                             borderRadius: BorderRadius.circular(22),
@@ -184,11 +180,11 @@ class _LoginScreenState extends State<LoginScreen>
                               ),
                             ],
                           ),
-                          child: Padding(
-                            padding: const EdgeInsets.all(16),
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(22),
                             child: Image.asset(
                               'assets/logo/app_icon.png',
-                              fit: BoxFit.contain,
+                              fit: BoxFit.cover,
                             ),
                           ),
                         ),
@@ -292,8 +288,6 @@ class _LoginScreenState extends State<LoginScreen>
 }
 
 // ── Google Sign-In Button ─────────────────────────────────────────────────
-// Clean, app-like style (rounded corners, soft elevation, real ripple)
-// rather than the strict 4px Google brand spec — matches the rest of the UI.
 
 class _GoogleSignInButton extends StatelessWidget {
   final bool isDark;
