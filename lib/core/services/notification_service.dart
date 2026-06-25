@@ -70,7 +70,7 @@ class NotificationService {
 
   static const _prefKey           = 'notifications_enabled';
   static const _storedNotifsKey   = 'stored_notifications';
-  static const _channelId         = 'au_alerts';
+  static const _channelId         = 'au_notifications';
   static const _channelName       = 'AU Result Alerts';
   static const _baseUrl           = 'https://eduhub-tau-rosy.vercel.app';
 
@@ -105,8 +105,19 @@ class NotificationService {
     await _localNotifications.initialize(
       initSettings,
       onDidReceiveNotificationResponse: (details) {
-        // TODO: navigate to notifications page on tap
+        print("Notification clicked");
       },
+
+      FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
+        print("Opened from background");
+      });
+      
+      final initialMessage =
+          await FirebaseMessaging.instance.getInitialMessage();
+      
+      if (initialMessage != null) {
+        print("Opened from terminated");
+      }
     );
 
     // Background handler
