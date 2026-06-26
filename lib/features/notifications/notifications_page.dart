@@ -5,10 +5,6 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
-// Import your NotificationsPage so we can push it directly
-// Adjust path if needed
-import '../notifications/notifications_page.dart';
-
 // ── Stored notification model ─────────────────────────────────────────────────
 class NotifItem {
   final String id;
