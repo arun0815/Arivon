@@ -4,7 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 
 import 'firebase_options.dart';
-import 'notification_service.dart';
+import 'core/services/notification_service.dart';
 
 import 'core/router/app_router.dart';
 import 'core/theme/app_theme.dart';
