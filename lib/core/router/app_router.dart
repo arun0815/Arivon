@@ -4,7 +4,7 @@ import '../../features/splash/splash_screen.dart';
 import '../../features/auth/login_screen.dart';
 import '../../features/onboarding/onboarding_screen.dart';
 import '../../features/shell/main_shell.dart';
-import '../../features/notifications/notifications_service.dart';
+import '../../features/notifications/notification_service.dart';
 
 class AppRouter {
   AppRouter._();
