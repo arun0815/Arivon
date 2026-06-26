@@ -188,7 +188,7 @@ return 'Still awake? That\'s between you and your sleep schedule 👀';
   onTap: () => Navigator.push(
     context,
     MaterialPageRoute(
-      builder: (_) => const NotificationsPage(),
+      builder: (_) => NotificationsPage(),
     ),
   ),
   child: Stack(
@@ -614,7 +614,7 @@ class _QuickAccess extends StatelessWidget {
                  Navigator.push(
                    ctx,
                    MaterialPageRoute(
-                    builder: (_) => const NotificationsPage(),
+                    builder: (_) => NotificationsPage(),
                    ),
                   );
               return;
