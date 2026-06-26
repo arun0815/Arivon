@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:go_router/go_router.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -105,6 +106,11 @@ Future<void> firebaseMessagingBackgroundHandler(RemoteMessage message) async {
 }
 
 class NotificationService {
+  /// Global navigator key, used so the app router can navigate (e.g. open
+  /// the Notifications page) when a push notification is tapped, even from
+  /// the background handler where there's no BuildContext available.
+  static final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
+
   static final _messaging         = FirebaseMessaging.instance;
   static final _localNotifications = FlutterLocalNotificationsPlugin();
 
@@ -149,7 +155,11 @@ class NotificationService {
     await _localNotifications.initialize(
       initSettings,
       onDidReceiveNotificationResponse: (details) {
-        // TODO: navigate to notifications page on tap
+        // Navigate to the notifications route when a push is tapped.
+        // Uses go_router's path-based push since the app router has no
+        // named routes (see app_router.dart's '/notifications' GoRoute).
+        final ctx = navigatorKey.currentContext;
+        if (ctx != null) ctx.push('/notifications');
       },
     );
 
