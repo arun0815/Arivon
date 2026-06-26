@@ -2,6 +2,37 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
+// ── Subscription model ────────────────────────────────────────────────────────
+class UserSubscription {
+  final String plan;   // 'free' | 'premium'
+  final String status; // 'active' | 'inactive'
+
+  const UserSubscription({
+    required this.plan,
+    required this.status,
+  });
+
+  factory UserSubscription.fromJson(Map<String, dynamic> json) {
+    return UserSubscription(
+      plan:   json['plan']   ?? 'free',
+      status: json['status'] ?? 'inactive',
+    );
+  }
+
+  Map<String, dynamic> toJson() => {
+    'plan':   plan,
+    'status': status,
+  };
+
+  bool get isPremium => plan == 'premium' && status == 'active';
+
+  static const UserSubscription free = UserSubscription(
+    plan: 'free',
+    status: 'inactive',
+  );
+}
+
+// ── UserProfile model ─────────────────────────────────────────────────────────
 class UserProfile {
   final String userId;
   final String name;
@@ -11,7 +42,8 @@ class UserProfile {
   final String? semester;
   final String? institute;
   final String? dateOfBirth;
-  final String? selectedAvatar; // locally stored asset path
+  final String? selectedAvatar;
+  final UserSubscription subscription;
 
   UserProfile({
     required this.userId,
@@ -23,19 +55,24 @@ class UserProfile {
     this.institute,
     this.dateOfBirth,
     this.selectedAvatar,
-  });
+    UserSubscription? subscription,
+  }) : subscription = subscription ?? UserSubscription.free;
 
   factory UserProfile.fromJson(Map<String, dynamic> json) {
     return UserProfile(
-      userId:         json['userId'] ?? '',
-      name:           json['name'] ?? '',
-      email:          json['email'] ?? '',
-      profileImg:     json['profileimg'],
-      department:     json['department'],
-      semester:       json['semester'],
-      institute:      json['institute'],
-      dateOfBirth:    json['dateOfBirth'],
-      selectedAvatar: json['selectedAvatar'], // from local cache
+      userId:       json['userId'] ?? '',
+      name:         json['name'] ?? '',
+      email:        json['email'] ?? '',
+      profileImg:   json['profileimg'],
+      department:   json['department'],
+      semester:     json['semester'],
+      institute:    json['institute'],
+      dateOfBirth:  json['dateOfBirth'],
+      selectedAvatar: json['selectedAvatar'],
+      subscription: json['subscription'] != null
+          ? UserSubscription.fromJson(
+              json['subscription'] as Map<String, dynamic>)
+          : UserSubscription.free,
     );
   }
 
@@ -49,9 +86,9 @@ class UserProfile {
     'institute':     institute,
     'dateOfBirth':   dateOfBirth,
     'selectedAvatar': selectedAvatar,
+    'subscription':  subscription.toJson(),
   };
 
-  // Copy with updated fields
   UserProfile copyWith({
     String? name,
     String? profileImg,
@@ -59,37 +96,39 @@ class UserProfile {
     String? semester,
     String? institute,
     String? selectedAvatar,
+    UserSubscription? subscription,
   }) {
     return UserProfile(
-      userId:         this.userId,
-      name:           name         ?? this.name,
-      email:          this.email,
-      profileImg:     profileImg   ?? this.profileImg,
-      department:     department   ?? this.department,
-      semester:       semester     ?? this.semester,
-      institute:      institute    ?? this.institute,
-      dateOfBirth:    this.dateOfBirth,
+      userId:         userId,
+      name:           name          ?? this.name,
+      email:          email,
+      profileImg:     profileImg    ?? this.profileImg,
+      department:     department    ?? this.department,
+      semester:       semester      ?? this.semester,
+      institute:      institute     ?? this.institute,
+      dateOfBirth:    dateOfBirth,
       selectedAvatar: selectedAvatar ?? this.selectedAvatar,
+      subscription:   subscription  ?? this.subscription,
     );
   }
 
-  String get initial => name.isNotEmpty ? name[0].toUpperCase() : 'U';
+  String get initial   => name.isNotEmpty ? name[0].toUpperCase() : 'U';
   String get firstName => name.split(' ').first;
 }
 
+// ── ProfileService ────────────────────────────────────────────────────────────
 class ProfileService {
-  static const String _baseUrl = 'https://eduhub-tau-rosy.vercel.app/api/profile';
-  static const String _cacheKey = 'cached_profile';
+  static const String _baseUrl   = 'https://eduhub-tau-rosy.vercel.app/api/profile';
+  static const String _cacheKey  = 'cached_profile';
   static const String _avatarKey = 'selected_avatar';
 
   // ── Load from local cache (instant, on app open) ──────────────────────────
   static Future<UserProfile?> loadCachedProfile() async {
     try {
-      final prefs = await SharedPreferences.getInstance();
+      final prefs  = await SharedPreferences.getInstance();
       final cached = prefs.getString(_cacheKey);
       if (cached == null) return null;
       final json = jsonDecode(cached) as Map<String, dynamic>;
-      // Merge saved avatar
       json['selectedAvatar'] = prefs.getString(_avatarKey);
       return UserProfile.fromJson(json);
     } catch (e) {
@@ -129,10 +168,8 @@ class ProfileService {
       final data = jsonDecode(response.body);
       if (data['success'] == true) {
         final profile = UserProfile.fromJson(data['data']);
-        // Merge locally saved avatar
-        final avatar = prefs.getString(_avatarKey);
-        final merged = profile.copyWith(selectedAvatar: avatar);
-        // Cache it
+        final avatar  = prefs.getString(_avatarKey);
+        final merged  = profile.copyWith(selectedAvatar: avatar);
         await _cacheProfile(merged);
         return merged;
       }
@@ -163,8 +200,8 @@ class ProfileService {
       );
       final data = jsonDecode(response.body);
       if (data['success'] == true) {
-        final prefs = await SharedPreferences.getInstance();
-        final avatar = prefs.getString(_avatarKey);
+        final prefs   = await SharedPreferences.getInstance();
+        final avatar  = prefs.getString(_avatarKey);
         final profile = UserProfile.fromJson(data['data'])
             .copyWith(selectedAvatar: avatar);
         await _cacheProfile(profile);
