@@ -8,7 +8,7 @@ import '../services/notification_service.dart';
 // NOTE: adjust this import path to match where notifications_page.dart
 // actually lives in your project (based on the relative imports inside
 // that file, it looked like lib/features/notifications/pages/).
-import '../../features/notifications/pages/notifications_page.dart';
+import '../../features/notifications/notifications_page.dart';
 
 class AppRouter {
   AppRouter._();
@@ -55,7 +55,7 @@ class AppRouter {
       ),
       GoRoute(
         path: '/notifications',
-        builder: (context, state) => const NotificationsPage(),
+        builder: (context, state) => NotificationsPage(),
       ),
     ],
   );
