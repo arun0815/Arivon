@@ -7,7 +7,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 // Import your NotificationsPage so we can push it directly
 // Adjust path if needed
-import '../features/notifications/notifications_page.dart';
+import '../notifications/notifications_page.dart';
 
 // ── Stored notification model ─────────────────────────────────────────────────
 class NotifItem {
