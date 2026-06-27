@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
@@ -110,7 +111,7 @@ class _ContactUsPageState extends State<ContactUsPage> {
               'honeypot':  '',  // always empty — bots fill this
             }),
           )
-          .timeout(const Duration(seconds: 15));
+          .timeout(const Duration(seconds: 10));
 
       final body = jsonDecode(response.body) as Map<String, dynamic>;
 
@@ -119,6 +120,9 @@ class _ContactUsPageState extends State<ContactUsPage> {
       } else if (response.statusCode == 429) {
         setState(() => _sending = false);
         _showError('Too many requests. Please try again after 1 hour.');
+      } else if (response.statusCode == 504) {
+        setState(() => _sending = false);
+        _showError('Server took too long. Please try again.');
       } else if (response.statusCode == 401 || response.statusCode == 403) {
         setState(() => _sending = false);
         _showError('Request blocked. Please update the app.');
@@ -126,6 +130,9 @@ class _ContactUsPageState extends State<ContactUsPage> {
         setState(() => _sending = false);
         _showError(body['message'] as String? ?? 'Failed to send. Please try again.');
       }
+    } on TimeoutException {
+      setState(() => _sending = false);
+      _showError('Connection timed out. Please try again.');
     } on Exception {
       setState(() => _sending = false);
       _showError('No internet connection. Please try again.');
