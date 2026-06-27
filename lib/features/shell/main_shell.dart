@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import '../home/home_tab.dart';
 import '../tools/tools_tab.dart';
 import '../updates/updates_tab.dart';
 import '../../../core/theme/app_colors.dart';
+import '../../../core/providers/profile_provider.dart';
+import '../../../widgets/birthday_overlay.dart';
 
 class MainShell extends StatefulWidget {
   const MainShell({super.key});
@@ -21,14 +24,19 @@ class _MainShellState extends State<MainShell> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: IndexedStack(
-        index: _currentIndex,
-        children: _tabs,
-      ),
-      bottomNavigationBar: _BottomNav(
-        currentIndex: _currentIndex,
-        onTap: (i) => setState(() => _currentIndex = i),
+    final isBirthday = context.watch<ProfileProvider>().isBirthdayToday;
+
+    return BirthdayOverlay(
+      isBirthday: isBirthday,
+      child: Scaffold(
+        body: IndexedStack(
+          index: _currentIndex,
+          children: _tabs,
+        ),
+        bottomNavigationBar: _BottomNav(
+          currentIndex: _currentIndex,
+          onTap: (i) => setState(() => _currentIndex = i),
+        ),
       ),
     );
   }
@@ -40,16 +48,16 @@ class _BottomNav extends StatelessWidget {
   const _BottomNav({required this.currentIndex, required this.onTap});
 
   static const _items = [
-    _NavItem(icon: Icons.home_outlined,    activeIcon: Icons.home_rounded,    label: 'Home'),
-    _NavItem(icon: Icons.build_outlined,   activeIcon: Icons.build_rounded,   label: 'Tools'),
-    _NavItem(icon: Icons.timeline_outlined,activeIcon: Icons.timeline_rounded, label: 'Updates'),
+    _NavItem(icon: Icons.home_outlined,     activeIcon: Icons.home_rounded,     label: 'Home'),
+    _NavItem(icon: Icons.build_outlined,    activeIcon: Icons.build_rounded,    label: 'Tools'),
+    _NavItem(icon: Icons.timeline_outlined, activeIcon: Icons.timeline_rounded, label: 'Updates'),
   ];
 
   @override
   Widget build(BuildContext context) {
-    final isDark  = Theme.of(context).brightness == Brightness.dark;
-    final bg      = isDark ? const Color(0xFF0F172A) : AppColors.white;
-    final border  = isDark ? const Color(0xFF1E293B) : AppColors.border;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final bg     = isDark ? const Color(0xFF0F172A) : AppColors.white;
+    final border = isDark ? const Color(0xFF1E293B) : AppColors.border;
 
     return Container(
       decoration: BoxDecoration(
@@ -89,7 +97,7 @@ class _BottomNav extends StatelessWidget {
                               : (isDark
                                   ? const Color(0xFF64748B)
                                   : AppColors.textTert),
-                          size: 26, // bigger icon
+                          size: 26,
                         ),
                       ),
                       const SizedBox(height: 3),
