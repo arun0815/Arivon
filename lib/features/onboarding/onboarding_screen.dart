@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../../core/theme/app_colors.dart';
+import '../../../core/services/profile_service.dart';
 
 class OnboardingScreen extends StatefulWidget {
   const OnboardingScreen({super.key});
@@ -11,10 +12,10 @@ class OnboardingScreen extends StatefulWidget {
 }
 
 class _OnboardingScreenState extends State<OnboardingScreen> {
-  final _nameCtrl      = TextEditingController();
   final _instituteCtrl = TextEditingController();
   String _department   = '';
   String _semester     = '';
+  DateTime? _dob;
   bool _isSaving       = false;
 
   final _departments = [
@@ -25,9 +26,40 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
 
   @override
   void dispose() {
-    _nameCtrl.dispose();
     _instituteCtrl.dispose();
     super.dispose();
+  }
+
+  Future<void> _pickDOB() async {
+    final now = DateTime.now();
+    final picked = await showDatePicker(
+      context: context,
+      initialDate: DateTime(now.year - 18, now.month, now.day),
+      firstDate: DateTime(1990),
+      lastDate: DateTime(now.year - 15, now.month, now.day),
+      helpText: 'SELECT YOUR BIRTHDAY',
+      builder: (context, child) {
+        final isDark = Theme.of(context).brightness == Brightness.dark;
+        return Theme(
+          data: Theme.of(context).copyWith(
+            colorScheme: ColorScheme.fromSeed(
+              seedColor: AppColors.primary,
+              brightness: isDark ? Brightness.dark : Brightness.light,
+            ),
+          ),
+          child: child!,
+        );
+      },
+    );
+    if (picked != null) setState(() => _dob = picked);
+  }
+
+  String _formatDOB(DateTime date) {
+    const months = [
+      'Jan','Feb','Mar','Apr','May','Jun',
+      'Jul','Aug','Sep','Oct','Nov','Dec'
+    ];
+    return '${date.day} ${months[date.month - 1]} ${date.year}';
   }
 
   Future<void> _skip() async {
@@ -38,35 +70,53 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
 
   Future<void> _finish() async {
     setState(() => _isSaving = true);
+
     final prefs = await SharedPreferences.getInstance();
     await prefs.setBool('profile_done', true);
-    if (_nameCtrl.text.trim().isNotEmpty)
-      await prefs.setString('name', _nameCtrl.text.trim());
+
+    final email = prefs.getString('user_email') ?? '';
+
     if (_instituteCtrl.text.trim().isNotEmpty)
       await prefs.setString('institute', _instituteCtrl.text.trim());
     if (_department.isNotEmpty)
       await prefs.setString('department', _department);
     if (_semester.isNotEmpty)
       await prefs.setString('semester', _semester);
+    if (_dob != null)
+      await prefs.setString('dob', _dob!.toIso8601String());
+
+    // Save to DB
+    if (email.isNotEmpty) {
+      await ProfileService.updateProfile(
+        email:       email,
+        institute:   _instituteCtrl.text.trim().isNotEmpty
+                         ? _instituteCtrl.text.trim() : null,
+        department:  _department.isNotEmpty ? _department : null,
+        semester:    _semester.isNotEmpty ? _semester : null,
+        dateOfBirth: _dob?.toIso8601String(),
+      );
+    }
+
     setState(() => _isSaving = false);
     if (mounted) context.go('/home');
   }
 
   @override
   Widget build(BuildContext context) {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
-    final bg     = isDark ? const Color(0xFF0F172A) : Colors.white;
-    final cardBg = isDark ? const Color(0xFF1E293B) : const Color(0xFFF8FAFC);
-    final border = isDark ? const Color(0xFF334155) : const Color(0xFFE2E8F0);
-    final text   = isDark ? Colors.white : AppColors.text;
-    final textSec= isDark ? const Color(0xFF94A3B8) : AppColors.textSec;
+    final isDark  = Theme.of(context).brightness == Brightness.dark;
+    final bg      = isDark ? const Color(0xFF0F172A) : Colors.white;
+    final cardBg  = isDark ? const Color(0xFF1E293B) : const Color(0xFFF8FAFC);
+    final border  = isDark ? const Color(0xFF334155) : const Color(0xFFE2E8F0);
+    final text    = isDark ? Colors.white : AppColors.text;
+    final textSec = isDark ? const Color(0xFF94A3B8) : AppColors.textSec;
 
     return Scaffold(
       backgroundColor: bg,
       body: SafeArea(
         child: Column(
           children: [
-            // ── Header ──────────────────────────────────────────────────────
+
+            // ── Header ───────────────────────────────────────────────────────
             Padding(
               padding: const EdgeInsets.fromLTRB(24, 20, 24, 0),
               child: Row(
@@ -90,7 +140,6 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                       ],
                     ),
                   ),
-                  // Skip
                   GestureDetector(
                     onTap: _skip,
                     child: Container(
@@ -98,8 +147,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                           horizontal: 14, vertical: 8),
                       decoration: BoxDecoration(
                         color: isDark
-                            ? const Color(0xFF1E293B)
-                            : AppColors.bg,
+                            ? const Color(0xFF1E293B) : AppColors.bg,
                         borderRadius: BorderRadius.circular(10),
                         border: Border.all(color: border),
                       ),
@@ -116,25 +164,13 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
               ),
             ),
 
-            // ── Form ────────────────────────────────────────────────────────
+            // ── Form ─────────────────────────────────────────────────────────
             Expanded(
               child: SingleChildScrollView(
                 padding: const EdgeInsets.fromLTRB(24, 24, 24, 24),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    // Name
-                    _Label('Full Name', isDark),
-                    const SizedBox(height: 8),
-                    _InputBox(
-                      controller: _nameCtrl,
-                      hint: 'Enter your full name',
-                      icon: Icons.person_outline_rounded,
-                      cardBg: cardBg,
-                      border: border,
-                      isDark: isDark,
-                    ),
-                    const SizedBox(height: 20),
 
                     // Institute
                     _Label('Institute', isDark),
@@ -143,9 +179,71 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                       controller: _instituteCtrl,
                       hint: 'eg. Anna University, Chennai',
                       icon: Icons.business_outlined,
-                      cardBg: cardBg,
-                      border: border,
-                      isDark: isDark,
+                      cardBg: cardBg, border: border, isDark: isDark,
+                    ),
+                    const SizedBox(height: 20),
+
+                    // Date of Birth
+                    _Label('Date of Birth', isDark),
+                    const SizedBox(height: 8),
+                    GestureDetector(
+                      onTap: _pickDOB,
+                      child: AnimatedContainer(
+                        duration: const Duration(milliseconds: 200),
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 16, vertical: 14),
+                        decoration: BoxDecoration(
+                          color: _dob != null
+                              ? AppColors.primary.withOpacity(0.08)
+                              : cardBg,
+                          borderRadius: BorderRadius.circular(12),
+                          border: Border.all(
+                            color: _dob != null ? AppColors.primary : border,
+                            width: 1.5,
+                          ),
+                        ),
+                        child: Row(
+                          children: [
+                            Icon(
+                              Icons.cake_outlined,
+                              color: _dob != null
+                                  ? AppColors.primary
+                                  : (isDark
+                                      ? const Color(0xFF64748B)
+                                      : AppColors.textTert),
+                              size: 20,
+                            ),
+                            const SizedBox(width: 12),
+                            Expanded(
+                              child: Text(
+                                _dob != null
+                                    ? _formatDOB(_dob!)
+                                    : 'Select your birthday',
+                                style: TextStyle(
+                                  fontSize: 15,
+                                  fontWeight: _dob != null
+                                      ? FontWeight.w600
+                                      : FontWeight.w400,
+                                  color: _dob != null
+                                      ? (isDark ? Colors.white : AppColors.text)
+                                      : (isDark
+                                          ? const Color(0xFF64748B)
+                                          : AppColors.textTert),
+                                ),
+                              ),
+                            ),
+                            Icon(
+                              Icons.calendar_month_rounded,
+                              color: _dob != null
+                                  ? AppColors.primary
+                                  : (isDark
+                                      ? const Color(0xFF64748B)
+                                      : AppColors.textTert),
+                              size: 18,
+                            ),
+                          ],
+                        ),
+                      ),
                     ),
                     const SizedBox(height: 20),
 
@@ -164,9 +262,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                             padding: const EdgeInsets.symmetric(
                                 horizontal: 14, vertical: 9),
                             decoration: BoxDecoration(
-                              color: sel
-                                  ? AppColors.primary
-                                  : cardBg,
+                              color: sel ? AppColors.primary : cardBg,
                               borderRadius: BorderRadius.circular(10),
                               border: Border.all(
                                 color: sel ? AppColors.primary : border,
@@ -178,9 +274,11 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                               style: TextStyle(
                                 fontSize: 13,
                                 fontWeight: sel
-                                    ? FontWeight.w700
-                                    : FontWeight.w500,
-                                color: sel ? Colors.white : (isDark ? Colors.white70 : AppColors.text),
+                                    ? FontWeight.w700 : FontWeight.w500,
+                                color: sel
+                                    ? Colors.white
+                                    : (isDark
+                                        ? Colors.white70 : AppColors.text),
                               ),
                             ),
                           ),
@@ -221,7 +319,10 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                                   style: TextStyle(
                                     fontSize: 17,
                                     fontWeight: FontWeight.w800,
-                                    color: sel ? Colors.white : (isDark ? Colors.white : AppColors.text),
+                                    color: sel
+                                        ? Colors.white
+                                        : (isDark
+                                            ? Colors.white : AppColors.text),
                                   ),
                                 ),
                                 Text(
@@ -237,14 +338,13 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                         );
                       }).toList(),
                     ),
-
                     const SizedBox(height: 32),
                   ],
                 ),
               ),
             ),
 
-            // ── Save button ──────────────────────────────────────────────────
+            // ── Save button ───────────────────────────────────────────────────
             Padding(
               padding: const EdgeInsets.fromLTRB(24, 0, 24, 28),
               child: SizedBox(
@@ -283,7 +383,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
   }
 }
 
-// ── Helper widgets ────────────────────────────────────────────────────────────
+// ── Helper widgets ─────────────────────────────────────────────────────────────
 class _Label extends StatelessWidget {
   final String text;
   final bool isDark;
@@ -336,9 +436,7 @@ class _InputBox extends StatelessWidget {
         decoration: InputDecoration(
           hintText: hint,
           hintStyle: TextStyle(
-            color: isDark
-                ? const Color(0xFF64748B)
-                : AppColors.textTert,
+            color: isDark ? const Color(0xFF64748B) : AppColors.textTert,
             fontSize: 14,
           ),
           prefixIcon: Icon(
