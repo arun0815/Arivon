@@ -39,7 +39,7 @@ class _CreditsPageState extends State<CreditsPage> {
 
   final List<String> _departments = [
     'All',
-    'Mech',
+    'MECH',
     'ECE',
     'CSE',
     'Civil',
@@ -115,7 +115,7 @@ class _CreditsPageState extends State<CreditsPage> {
         case 'CSE':
         case 'ECE':
           return const Color(0xFF3A2E1A);
-        case 'Mech':
+        case 'MECH':
           return const Color(0xFF1E2A40);
         case 'Civil':
           return const Color(0xFF1B3326);
@@ -130,7 +130,7 @@ class _CreditsPageState extends State<CreditsPage> {
         return const Color(0xFFFFE3CC);
       case 'ECE':
         return const Color(0xFFFFE9CC);
-      case 'Mech':
+      case 'MECH':
         return const Color(0xFFD9E8FF);
       case 'Civil':
         return const Color(0xFFE6F4EA);
@@ -147,7 +147,7 @@ class _CreditsPageState extends State<CreditsPage> {
         case 'CSE':
         case 'ECE':
           return const Color(0xFFF5A949);
-        case 'Mech':
+        case 'MECH':
           return const Color(0xFF6FA3FF);
         case 'Civil':
           return const Color(0xFF5FD08C);
@@ -161,7 +161,7 @@ class _CreditsPageState extends State<CreditsPage> {
       case 'CSE':
       case 'ECE':
         return const Color(0xFFE08A2C);
-      case 'Mech':
+      case 'MECH':
         return const Color(0xFF2C6FE0);
       case 'Civil':
         return const Color(0xFF2E9E5B);
