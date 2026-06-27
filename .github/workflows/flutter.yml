@@ -28,18 +28,20 @@ jobs:
 
       - name: Decode Keystore
         run: echo "${{ secrets.KEYSTORE_BASE64 }}" | base64 --decode > android/app/release.keystore
- 
+
       - name: Generate App Icons
         run: dart run flutter_launcher_icons
-  
+
       - name: Build APK
-        run: flutter build apk --split-per-abi
+        run: |
+          flutter build apk --split-per-abi \
+            --dart-define=CONTACT_API_URL=${{ secrets.CONTACT_API_URL }} \
+            --dart-define=CONTACT_API_SECRET=${{ secrets.CONTACT_API_SECRET }}
         env:
           KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
           KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
           STORE_PASSWORD: ${{ secrets.STORE_PASSWORD }}
           STORE_FILE: release.keystore
-          
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
