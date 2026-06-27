@@ -3,13 +3,12 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import '../../../core/theme/app_colors.dart';
 
-// ─── EmailJS Config ───────────────────────────────────────────────────────────
-const _kServiceId  = 'service_uqc3vd1';
-const _kTemplateId = 'template_wwofefm';
-const _kPublicKey  = 'H4nrwMO7ghHmGSS0S';
-const _kToEmail    = 'arunloki4374@gmail.com';
+// ─── API Config ───────────────────────────────────────────────────────────────
+// Pass these via --dart-define at build time — never hardcode secrets
+const _kApiUrl    = String.fromEnvironment('CONTACT_API_URL');
+const _kApiSecret = String.fromEnvironment('CONTACT_API_SECRET');
 
-// ─── Theme helpers (same pattern as tools_tab / profile_tab) ─────────────────
+// ─── Theme helpers ────────────────────────────────────────────────────────────
 bool _isDark(BuildContext ctx) =>
     Theme.of(ctx).brightness == Brightness.dark;
 
@@ -92,31 +91,42 @@ class _ContactUsPageState extends State<ContactUsPage> {
   Future<void> _send() async {
     if (!_validate()) return;
     setState(() => _sending = true);
+
     try {
-      final response = await http.post(
-        Uri.parse('https://api.emailjs.com/api/v1.0/email/send'),
-        headers: {'Content-Type': 'application/json'},
-        body: jsonEncode({
-          'service_id':  _kServiceId,
-          'template_id': _kTemplateId,
-          'user_id':     _kPublicKey,
-          'template_params': {
-            'to_email':   _kToEmail,
-            'from_name':  _nameCtrl.text.trim(),
-            'from_email': _emailCtrl.text.trim(),
-            'phone':      _phoneCtrl.text.trim(),
-            'position':   _position,
-            'message':    _messageCtrl.text.trim(),
-          },
-        }),
-      );
-      if (response.statusCode == 200) {
+      final response = await http
+          .post(
+            Uri.parse(_kApiUrl),
+            headers: {
+              'Content-Type': 'application/json',
+              'User-Agent':   'ArivonApp/1.0',  // must match backend check
+              'x-api-secret': _kApiSecret,       // secret header
+            },
+            body: jsonEncode({
+              'name':      _nameCtrl.text.trim(),
+              'email':     _emailCtrl.text.trim(),
+              'phone':     _phoneCtrl.text.trim(),
+              'position':  _position,
+              'message':   _messageCtrl.text.trim(),
+              'honeypot':  '',  // always empty — bots fill this
+            }),
+          )
+          .timeout(const Duration(seconds: 15));
+
+      final body = jsonDecode(response.body) as Map<String, dynamic>;
+
+      if (response.statusCode == 200 && body['success'] == true) {
         setState(() { _sending = false; _sent = true; });
+      } else if (response.statusCode == 429) {
+        setState(() => _sending = false);
+        _showError('Too many requests. Please try again after 1 hour.');
+      } else if (response.statusCode == 401 || response.statusCode == 403) {
+        setState(() => _sending = false);
+        _showError('Request blocked. Please update the app.');
       } else {
         setState(() => _sending = false);
-        _showError('Failed to send. Please try again.');
+        _showError(body['message'] as String? ?? 'Failed to send. Please try again.');
       }
-    } catch (_) {
+    } on Exception {
       setState(() => _sending = false);
       _showError('No internet connection. Please try again.');
     }
@@ -232,7 +242,7 @@ class _ContactUsPageState extends State<ContactUsPage> {
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                _FieldLabel(label: 'Full Name'),
+                                const _FieldLabel(label: 'Full Name'),
                                 _InputField(
                                   controller: _nameCtrl,
                                   hint: 'e.g. Arun Kumar',
@@ -244,7 +254,7 @@ class _ContactUsPageState extends State<ContactUsPage> {
 
                                 const SizedBox(height: 16),
 
-                                _FieldLabel(label: 'Email Address'),
+                                const _FieldLabel(label: 'Email Address'),
                                 _InputField(
                                   controller: _emailCtrl,
                                   hint: 'e.g. arun@gmail.com',
@@ -257,7 +267,7 @@ class _ContactUsPageState extends State<ContactUsPage> {
 
                                 const SizedBox(height: 16),
 
-                                _FieldLabel(label: 'Phone Number'),
+                                const _FieldLabel(label: 'Phone Number'),
                                 _InputField(
                                   controller: _phoneCtrl,
                                   hint: 'e.g. 9876543210',
@@ -270,7 +280,7 @@ class _ContactUsPageState extends State<ContactUsPage> {
 
                                 const SizedBox(height: 16),
 
-                                _FieldLabel(label: 'Your Role'),
+                                const _FieldLabel(label: 'Your Role'),
                                 _DropdownField(
                                   value: _position,
                                   items: _positions,
@@ -280,11 +290,10 @@ class _ContactUsPageState extends State<ContactUsPage> {
 
                                 const SizedBox(height: 16),
 
-                                _FieldLabel(label: 'Your Message'),
+                                const _FieldLabel(label: 'Your Message'),
                                 _InputField(
                                   controller: _messageCtrl,
-                                  hint:
-                                      'Describe your issue or query in detail...',
+                                  hint: 'Describe your issue or query in detail...',
                                   error: _messageError,
                                   prefix: Icons.chat_bubble_outline_rounded,
                                   maxLines: 5,
@@ -457,11 +466,10 @@ class _InputField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final hasError    = error != null;
-    final fillColor   = _inputFill(context);
+    final hasError     = error != null;
+    final fillColor    = _inputFill(context);
     final normalBorder = _inputBorder(context);
-    final activeBorder = AppColors.primary;
-    final errorColor  = AppColors.rose;
+    final errorColor   = AppColors.rose;
 
     final borderColor = hasError ? errorColor : normalBorder;
 
@@ -472,7 +480,7 @@ class _InputField extends StatelessWidget {
     final focusedBorder = OutlineInputBorder(
       borderRadius: BorderRadius.circular(12),
       borderSide: BorderSide(
-          color: hasError ? errorColor : activeBorder, width: 1.5),
+          color: hasError ? errorColor : AppColors.primary, width: 1.5),
     );
 
     return Column(
@@ -483,12 +491,10 @@ class _InputField extends StatelessWidget {
           maxLines: maxLines,
           keyboardType: keyboardType,
           onChanged: onChanged,
-          style: TextStyle(
-              fontSize: 14, color: _text(context)),
+          style: TextStyle(fontSize: 14, color: _text(context)),
           decoration: InputDecoration(
             hintText: hint,
-            hintStyle: TextStyle(
-                fontSize: 13, color: _textTert(context)),
+            hintStyle: TextStyle(fontSize: 13, color: _textTert(context)),
             prefixIcon: Padding(
               padding: const EdgeInsets.only(left: 14, right: 10),
               child: Icon(prefix,
@@ -503,10 +509,10 @@ class _InputField extends StatelessWidget {
               horizontal: 14,
               vertical: maxLines > 1 ? 14 : 0,
             ),
-            border:        inputBorder,
-            enabledBorder: inputBorder,
-            focusedBorder: focusedBorder,
-            errorBorder:   inputBorder,
+            border:             inputBorder,
+            enabledBorder:      inputBorder,
+            focusedBorder:      focusedBorder,
+            errorBorder:        inputBorder,
             focusedErrorBorder: focusedBorder,
           ),
         ),
@@ -514,12 +520,10 @@ class _InputField extends StatelessWidget {
           const SizedBox(height: 6),
           Row(
             children: [
-              Icon(Icons.error_outline_rounded,
-                  size: 13, color: errorColor),
+              Icon(Icons.error_outline_rounded, size: 13, color: errorColor),
               const SizedBox(width: 4),
               Text(error!,
-                  style: TextStyle(
-                      fontSize: 12, color: errorColor)),
+                  style: TextStyle(fontSize: 12, color: errorColor)),
             ],
           ),
         ],
@@ -542,17 +546,13 @@ class _DropdownField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final fillColor    = _inputFill(context);
-    final borderColor  = _inputBorder(context);
-    final activeBorder = AppColors.primary;
-
     return Container(
-      decoration: BoxDecoration(
-        color: fillColor,
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: borderColor),
-      ),
       padding: const EdgeInsets.symmetric(horizontal: 14),
+      decoration: BoxDecoration(
+        color: _inputFill(context),
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: _inputBorder(context)),
+      ),
       child: DropdownButtonHideUnderline(
         child: DropdownButton<String>(
           value: value,
@@ -561,15 +561,10 @@ class _DropdownField extends StatelessWidget {
           style: TextStyle(fontSize: 14, color: _text(context)),
           icon: Icon(Icons.keyboard_arrow_down_rounded,
               color: _textTert(context)),
-          onChanged: onChanged,
           items: items
-              .map((e) => DropdownMenuItem(
-                    value: e,
-                    child: Text(e,
-                        style: TextStyle(
-                            fontSize: 14, color: _text(context))),
-                  ))
+              .map((e) => DropdownMenuItem(value: e, child: Text(e)))
               .toList(),
+          onChanged: onChanged,
         ),
       ),
     );
