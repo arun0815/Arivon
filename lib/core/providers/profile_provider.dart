@@ -10,22 +10,21 @@ class ProfileProvider extends ChangeNotifier {
   bool get isLoading => _isLoading;
   String? get error => _error;
 
-  /// On app open — load cache instantly, then refresh from API in background
+  // ✅ Birthday check — use this anywhere in the app
+  bool get isBirthdayToday => _profile?.isBirthdayToday ?? false;
+
   Future<void> loadProfile() async {
     _error = null;
 
-    // Step 1: Load from cache immediately (no loading spinner)
     final cached = await ProfileService.loadCachedProfile();
     if (cached != null) {
       _profile = cached;
-      notifyListeners(); // UI shows instantly
+      notifyListeners();
     } else {
-      // No cache — show loading
       _isLoading = true;
       notifyListeners();
     }
 
-    // Step 2: Fetch fresh data from API in background
     final fresh = await ProfileService.fetchProfile();
     if (fresh != null) {
       _profile = fresh;
@@ -38,21 +37,22 @@ class ProfileProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  /// Update profile and refresh
   Future<bool> updateProfile({
     String? name,
     String? institute,
     String? department,
     String? semester,
+    String? dateOfBirth, // ✅ added
   }) async {
     if (_profile == null) return false;
 
     final updated = await ProfileService.updateProfile(
-      email:      _profile!.email,
-      name:       name,
-      institute:  institute,
-      department: department,
-      semester:   semester,
+      email:       _profile!.email,
+      name:        name,
+      institute:   institute,
+      department:  department,
+      semester:    semester,
+      dateOfBirth: dateOfBirth, // ✅ added
     );
 
     if (updated != null) {
@@ -63,7 +63,6 @@ class ProfileProvider extends ChangeNotifier {
     return false;
   }
 
-  /// Save avatar selection locally and update UI
   Future<void> updateAvatar(String? assetPath) async {
     await ProfileService.saveAvatar(assetPath);
     if (_profile != null) {
