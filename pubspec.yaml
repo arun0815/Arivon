@@ -1,7 +1,7 @@
 name: Arivon
 description: Smart Academic Companion for Students
 publish_to: 'none'
-version: 1.0.0+1
+version: 1.0.6+1
 
 environment:
   sdk: '>=3.0.0 <4.0.0'
@@ -71,5 +71,6 @@ flutter:
     - assets/images/
     - assets/avatars/
     - assets/logo/app_icon.png
+    - assets/logo/app_icon_birthday.png
     - assets/data/facts.json
     - assets/images/google_logo.png
