@@ -31,18 +31,37 @@ class _SplashScreenState extends State<SplashScreen>
     );
 
     _fadeAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
-      CurvedAnimation(parent: _animationController, curve: Curves.easeIn),
+      CurvedAnimation(
+        parent: _animationController,
+        curve: Curves.easeIn,
+      ),
     );
 
     _scaleAnimation = Tween<double>(begin: 0.85, end: 1.0).animate(
-      CurvedAnimation(parent: _animationController, curve: Curves.easeOutBack),
+      CurvedAnimation(
+        parent: _animationController,
+        curve: Curves.easeOutBack,
+      ),
     );
 
     _animationController.forward();
+
+    // Run init and minimum display time together
     _initializeApp();
   }
 
   Future<void> _initializeApp() async {
+    await Future.wait([
+      _doInit(),
+      Future.delayed(const Duration(milliseconds: 1500)), // min splash time
+    ]);
+
+    if (!mounted) return;
+    final route = await AppRouter.getInitialRoute();
+    if (mounted) context.go(route);
+  }
+
+  Future<void> _doInit() async {
     try {
       await Firebase.initializeApp(
         options: DefaultFirebaseOptions.currentPlatform,
@@ -54,10 +73,6 @@ class _SplashScreenState extends State<SplashScreen>
     } catch (e) {
       debugPrint('Init error: $e');
     }
-
-    if (!mounted) return;
-    final route = await AppRouter.getInitialRoute();
-    if (mounted) context.go(route);
   }
 
   @override
@@ -83,8 +98,8 @@ class _SplashScreenState extends State<SplashScreen>
             );
           },
           child: Container(
-            width: 200,
-            height: 200,
+            width: 190,
+            height: 190,
             decoration: BoxDecoration(
               color: Colors.white.withOpacity(0.04),
               borderRadius: BorderRadius.circular(40),
