@@ -370,7 +370,7 @@ class _ToolCard extends StatelessWidget {
             
       case 'Question Paper':
         const urls = {
-          'Question Paper': 'https://eduhub-tau-rosy.vercel.app/question-papers',
+          'Question Paper': 'https://myarivon.in/question-papers',
           };
         Navigator.push(context,
             MaterialPageRoute(
