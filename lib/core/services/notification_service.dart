@@ -118,7 +118,7 @@ class NotificationService {
   static const _storedNotifsKey   = 'stored_notifications';
   static const _channelId         = 'au_alerts';
   static const _channelName       = 'AU Result Alerts';
-  static const _baseUrl           = 'https://eduhub-tau-rosy.vercel.app';
+  static const _baseUrl           = 'https://myarivon.in';
 
   // Remote notification feed (shown in the in-app Notifications page)
   static const _feedBaseUrl       = 'https://coe-notifier.vercel.app/api/notifications';
