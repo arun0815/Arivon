@@ -50,7 +50,7 @@ const _departments = [
     color: AppColors.primary,
     lightBg: AppColors.primarySoft,
     darkBg: AppColors.darkPrimarySoft,
-    url: 'https://www.enggtree.com/anna-university-lecture-notes-2021-regulation-cse-department/',
+    url: 'https://www.myarivon.in/department/cse',
   ),
   _Dept(
     name: 'ECE',
@@ -59,7 +59,7 @@ const _departments = [
     color: AppColors.violet,
     lightBg: AppColors.violetSoft,
     darkBg: AppColors.darkVioletSoft,
-    url: 'https://www.brainkart.com/materials/ece---anna-university-2021-regulation-1003/',
+    url: 'https://www.myarivon.in/department/ece',
   ),
   _Dept(
     name: 'EEE',
@@ -68,7 +68,7 @@ const _departments = [
     color: AppColors.amber,
     lightBg: AppColors.amberSoft,
     darkBg: AppColors.darkAmberSoft,
-    url: 'https://www.brainkart.com/materials/eee---anna-university-2021-regulation-1002/',
+    url: 'https://www.myarivon.in/department/eee',
   ),
   _Dept(
     name: 'Mech',
@@ -77,7 +77,7 @@ const _departments = [
     color: AppColors.teal,
     lightBg: AppColors.tealSoft,
     darkBg: AppColors.darkTealSoft,
-    url: 'https://www.brainkart.com/materials/engineering-mechanics---me3351-2034/notes/',
+    url: 'https://www.myarivon.in/department/mech',
   ),
   _Dept(
     name: 'Civil',
@@ -86,17 +86,17 @@ const _departments = [
     color: AppColors.success,
     lightBg: AppColors.successSoft,
     darkBg: AppColors.darkSuccessSoft,
-    url: 'https://www.brainkart.com/materials/civil---anna-university-2021-regulation-1005/',
+    url: 'https://www.myarivon.in/department/civil',
   ),
-  _Dept(
-    name: 'IT',
-    fullName: 'Information Technology',
-    icon: Icons.terminal_rounded,
-    color: AppColors.indigo,
-    lightBg: AppColors.indigoSoft,
-    darkBg: AppColors.darkIndigoSoft,
-    url: 'https://www.brainkart.com/materials/it---anna-university-2021-regulation-1007/',
-  ),
+  // _Dept(
+  //   name: 'IT',
+  //   fullName: 'Information Technology',
+  //   icon: Icons.terminal_rounded,
+  //   color: AppColors.indigo,
+  //   lightBg: AppColors.indigoSoft,
+  //   darkBg: AppColors.darkIndigoSoft,
+  //   url: 'https://www.myarivon.in/department/it',
+  // ),
 ];
 
 // ─── Page ─────────────────────────────────────────────────────────────────────
