@@ -165,52 +165,6 @@ class _SplashScreenState extends State<SplashScreen>
                   ),
                 ),
               ),
-
-              // ── Birthday label — only on birthday ──────────────────────
-              if (_isBirthday) ...[
-                const SizedBox(height: 24),
-                AnimatedOpacity(
-                  opacity: _isBirthday ? 1.0 : 0.0,
-                  duration: const Duration(milliseconds: 500),
-                  child: Container(
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 20, vertical: 10),
-                    decoration: BoxDecoration(
-                      gradient: const LinearGradient(
-                        colors: [Color(0xFF6C63FF), Color(0xFFEC4899)],
-                        begin: Alignment.centerLeft,
-                        end: Alignment.centerRight,
-                      ),
-                      borderRadius: BorderRadius.circular(30),
-                      boxShadow: [
-                        BoxShadow(
-                          color: const Color(0xFF6C63FF).withOpacity(0.4),
-                          blurRadius: 16,
-                          offset: const Offset(0, 6),
-                        ),
-                      ],
-                    ),
-                    child: const Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Text('🎂', style: TextStyle(fontSize: 16)),
-                        SizedBox(width: 8),
-                        Text(
-                          'Happy Birthday!',
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 15,
-                            fontWeight: FontWeight.w700,
-                            letterSpacing: 0.3,
-                          ),
-                        ),
-                        SizedBox(width: 8),
-                        Text('🎉', style: TextStyle(fontSize: 16)),
-                      ],
-                    ),
-                  ),
-                ),
-              ],
             ],
           ),
         ),
