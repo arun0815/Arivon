@@ -3,7 +3,7 @@ import '../theme/app_colors.dart'; // adjust path to match your project structur
 
 // ─── API config ───────────────────────────────────────────────────────────────
 // TODO: point this at your real backend endpoint.
-const String updatesApiUrl = 'https://eduhub-tau-rosy.vercel.app/api/updates';
+const String updatesApiUrl = 'https://myarivon.in/api/updates';
 
 // ─── Model ────────────────────────────────────────────────────────────────────
 class UpdateItem {
