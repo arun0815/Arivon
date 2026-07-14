@@ -367,16 +367,25 @@ class _ToolCard extends StatelessWidget {
       case 'Syllabus':
         Navigator.push(context,
             MaterialPageRoute(builder : (_) =>  SyllabusPage()));
+
+      case 'Attendance':
+        Navigator.push(context, MaterialPageRoute(
+            builder: (_) => const FilteredUpdatesPage(type: 'attendance', title: 'Attendance')));
+    
+      case 'Internal':
+        Navigator.push(context, MaterialPageRoute(
+          builder: (_) => const FilteredUpdatesPage(type: 'internal', title: 'Internal')));
+    
+      case 'Timetable':
+        Navigator.push(context, MaterialPageRoute(
+          builder: (_) => const FilteredUpdatesPage(type: 'timetable', title: 'Timetable')));
             
       case 'Question Paper':
-        const urls = {
-          'Question Paper': 'https://myarivon.in/question-papers',
-          };
-        Navigator.push(context,
-            MaterialPageRoute(
-                builder: (_) => ToolWebViewPage(
-                    title: tool.label, url: urls[tool.label]!)));
-
+          Navigator.push(context,
+              MaterialPageRoute(
+                  builder: (_) => ToolWebViewPage(
+                      title: tool.label,
+                      url: 'https://myarivon.in/question-papers')));
       default:
         Navigator.push(context,
             MaterialPageRoute(
