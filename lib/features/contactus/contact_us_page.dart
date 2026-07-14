@@ -252,7 +252,7 @@ class _ContactUsPageState extends State<ContactUsPage> {
                                 const _FieldLabel(label: 'Full Name'),
                                 _InputField(
                                   controller: _nameCtrl,
-                                  hint: 'e.g. Arun Kumar',
+                                  hint: 'Your Name',
                                   error: _nameError,
                                   prefix: Icons.person_outline_rounded,
                                   onChanged: (_) =>
@@ -264,7 +264,7 @@ class _ContactUsPageState extends State<ContactUsPage> {
                                 const _FieldLabel(label: 'Email Address'),
                                 _InputField(
                                   controller: _emailCtrl,
-                                  hint: 'e.g. arun@gmail.com',
+                                  hint: 'example@gmail.com',
                                   error: _emailError,
                                   prefix: Icons.mail_outline_rounded,
                                   keyboardType: TextInputType.emailAddress,
@@ -277,7 +277,7 @@ class _ContactUsPageState extends State<ContactUsPage> {
                                 const _FieldLabel(label: 'Phone Number'),
                                 _InputField(
                                   controller: _phoneCtrl,
-                                  hint: 'e.g. 9876543210',
+                                  hint: '9191919191',
                                   error: _phoneError,
                                   prefix: Icons.phone_outlined,
                                   keyboardType: TextInputType.phone,
