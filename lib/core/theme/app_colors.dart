@@ -34,6 +34,16 @@ class AppColors {
   static const brown       = Color(0xFFB45309);
   static const brownSoft   = Color(0xFFFEF3C7);
 
+  // Orange — used for 'internal' type
+static const Color orange = Color(0xFFF97316);
+static const Color orangeSoft = Color(0xFFFFEDD5);
+static const Color darkOrangeSoft = Color(0xFF7C2D12);
+
+// Indigo — used for 'attendance' type
+static const Color indigo = Color(0xFF6366F1);
+static const Color indigoSoft = Color(0xFFE0E7FF);
+static const Color darkIndigoSoft = Color(0xFF312E81);
+
   // ── Dark Mode Neutrals ─────────────────────────────────────────────────────
   static const darkBg          = Color(0xFF0B1120); // scaffold background
   static const darkSurface     = Color(0xFF0F172A); // appbar, cards
