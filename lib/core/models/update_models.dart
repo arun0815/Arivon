@@ -71,6 +71,15 @@ TypeStyle typeStyleFor(String type) {
     case 'exams':
       return TypeStyle(AppColors.rose, AppColors.roseSoft,
           AppColors.darkRoseSoft, Icons.calendar_today_outlined);
+    case 'internal':
+      return TypeStyle(AppColors.orange, AppColors.orangeSoft,
+          AppColors.darkOrangeSoft, Icons.assignment_outlined);
+    case 'timetable':
+      return TypeStyle(AppColors.teal, AppColors.tealSoft,
+          AppColors.darkTealSoft, Icons.schedule_outlined);
+    case 'attendance':
+      return TypeStyle(AppColors.indigo, AppColors.indigoSoft,
+          AppColors.darkIndigoSoft, Icons.fact_check_outlined);
     default:
       return TypeStyle(AppColors.violet, AppColors.violetSoft,
           AppColors.darkVioletSoft, Icons.campaign_outlined);
