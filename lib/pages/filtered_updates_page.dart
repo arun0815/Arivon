@@ -1,12 +1,12 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import '../theme/app_colors.dart';
+import '../theme/app_colors.dart'; // adjust path to match your project
 import '../core/models/update_model.dart'; // adjust path to match your project
 
 class FilteredUpdatesPage extends StatefulWidget {
-  final String type;       // e.g. 'attendance', 'internal', 'timetable'
-  final String title;      // e.g. 'Attendance'
+  final String type; // e.g. 'attendance', 'internal', 'timetable'
+  final String title; // e.g. 'Attendance'
 
   const FilteredUpdatesPage({
     super.key,
@@ -30,7 +30,10 @@ class _FilteredUpdatesPageState extends State<FilteredUpdatesPage> {
   }
 
   Future<void> _fetch() async {
-    setState(() { _loading = true; _error = null; });
+    setState(() {
+      _loading = true;
+      _error = null;
+    });
     try {
       final res = await http
           .get(Uri.parse(updatesApiUrl))
@@ -41,7 +44,12 @@ class _FilteredUpdatesPageState extends State<FilteredUpdatesPage> {
       }
 
       final decoded = jsonDecode(res.body);
-      // Adjust this line if your API wraps the list, e.g. decoded['data']
+
+      // API shape: { "success": true, "data": [...] }
+      if (decoded is Map && decoded['success'] != true) {
+        throw Exception(decoded['message'] ?? 'Request failed');
+      }
+
       final List rawList = decoded is List ? decoded : (decoded['data'] ?? []);
 
       final all = rawList
@@ -53,9 +61,15 @@ class _FilteredUpdatesPageState extends State<FilteredUpdatesPage> {
           .toList()
         ..sort((a, b) => b.createdAt.compareTo(a.createdAt));
 
-      setState(() { _items = filtered; _loading = false; });
+      setState(() {
+        _items = filtered;
+        _loading = false;
+      });
     } catch (e) {
-      setState(() { _error = 'Failed to load updates. Please try again.'; _loading = false; });
+      setState(() {
+        _error = 'Failed to load updates. Please try again.';
+        _loading = false;
+      });
     }
   }
 
@@ -75,7 +89,8 @@ class _FilteredUpdatesPageState extends State<FilteredUpdatesPage> {
       backgroundColor: scaffoldBg,
       appBar: AppBar(
         title: Text(widget.title,
-            style: TextStyle(fontSize: 17, fontWeight: FontWeight.w700, color: textColor)),
+            style: TextStyle(
+                fontSize: 17, fontWeight: FontWeight.w700, color: textColor)),
         backgroundColor: headerBg,
         surfaceTintColor: Colors.transparent,
         elevation: 0,
@@ -90,14 +105,19 @@ class _FilteredUpdatesPageState extends State<FilteredUpdatesPage> {
         child: _loading
             ? const Center(child: CircularProgressIndicator())
             : _error != null
-                ? _ErrorState(message: _error!, onRetry: _fetch, textColor: textSec)
+                ? _ErrorState(
+                    message: _error!, onRetry: _fetch, textColor: textSec)
                 : _items.isEmpty
-                    ? _EmptyState(title: widget.title, icon: style.icon, textColor: textSec)
+                    ? _EmptyState(
+                        title: widget.title,
+                        icon: style.icon,
+                        textColor: textSec)
                     : ListView.separated(
                         padding: const EdgeInsets.all(16),
                         itemCount: _items.length,
                         separatorBuilder: (_, __) => const SizedBox(height: 12),
-                        itemBuilder: (ctx, i) => _UpdateCard(item: _items[i], style: style),
+                        itemBuilder: (ctx, i) =>
+                            _UpdateCard(item: _items[i], style: style),
                       ),
       ),
     );
@@ -129,8 +149,10 @@ class _UpdateCard extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Container(
-            width: 42, height: 42,
-            decoration: BoxDecoration(color: iconBg, borderRadius: BorderRadius.circular(12)),
+            width: 42,
+            height: 42,
+            decoration: BoxDecoration(
+                color: iconBg, borderRadius: BorderRadius.circular(12)),
             child: Icon(style.icon, color: style.color, size: 20),
           ),
           const SizedBox(width: 12),
@@ -141,27 +163,42 @@ class _UpdateCard extends StatelessWidget {
                 Row(
                   children: [
                     Expanded(
-                      child: Text(item.title,
-                          style: TextStyle(fontSize: 14, fontWeight: FontWeight.w700, color: text),
-                          maxLines: 2, overflow: TextOverflow.ellipsis),
+                      child: Text(
+                        item.title,
+                        style: TextStyle(
+                            fontSize: 14,
+                            fontWeight: FontWeight.w700,
+                            color: text),
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
+                      ),
                     ),
                     if (item.isImportant)
                       Container(
                         margin: const EdgeInsets.only(left: 6),
-                        padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 6, vertical: 2),
                         decoration: BoxDecoration(
                           color: AppColors.rose.withOpacity(0.12),
                           borderRadius: BorderRadius.circular(6),
                         ),
-                        child: const Text('Important',
-                            style: TextStyle(fontSize: 9, fontWeight: FontWeight.w700, color: AppColors.rose)),
+                        child: const Text(
+                          'Important',
+                          style: TextStyle(
+                              fontSize: 9,
+                              fontWeight: FontWeight.w700,
+                              color: AppColors.rose),
+                        ),
                       ),
                   ],
                 ),
                 const SizedBox(height: 4),
-                Text(item.description,
-                    style: TextStyle(fontSize: 12, color: textSec, height: 1.4),
-                    maxLines: 2, overflow: TextOverflow.ellipsis),
+                Text(
+                  item.description,
+                  style: TextStyle(fontSize: 12, color: textSec, height: 1.4),
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                ),
                 const SizedBox(height: 8),
                 Text(fullDateLabel(item.createdAt),
                     style: TextStyle(fontSize: 11, color: textSec)),
@@ -178,7 +215,8 @@ class _EmptyState extends StatelessWidget {
   final String title;
   final IconData icon;
   final Color textColor;
-  const _EmptyState({required this.title, required this.icon, required this.textColor});
+  const _EmptyState(
+      {required this.title, required this.icon, required this.textColor});
 
   @override
   Widget build(BuildContext context) {
@@ -188,7 +226,8 @@ class _EmptyState extends StatelessWidget {
         children: [
           Icon(icon, size: 48, color: textColor.withOpacity(0.4)),
           const SizedBox(height: 12),
-          Text('No $title updates yet', style: TextStyle(fontSize: 14, color: textColor)),
+          Text('No $title updates yet',
+              style: TextStyle(fontSize: 14, color: textColor)),
         ],
       ),
     );
@@ -199,7 +238,8 @@ class _ErrorState extends StatelessWidget {
   final String message;
   final VoidCallback onRetry;
   final Color textColor;
-  const _ErrorState({required this.message, required this.onRetry, required this.textColor});
+  const _ErrorState(
+      {required this.message, required this.onRetry, required this.textColor});
 
   @override
   Widget build(BuildContext context) {
