@@ -370,15 +370,15 @@ class _ToolCard extends StatelessWidget {
 
       case 'Attendance':
         Navigator.push(context, MaterialPageRoute(
-            builder: (_) => const FilteredUpdatesPage(type: 'attendance', title: 'Attendance')));
+            builder: (_) => FilteredUpdatesPage(type: 'attendance', title: 'Attendance')));
     
       case 'Internal':
         Navigator.push(context, MaterialPageRoute(
-          builder: (_) => const FilteredUpdatesPage(type: 'internal', title: 'Internal')));
+          builder: (_) => FilteredUpdatesPage(type: 'internal', title: 'Internal')));
     
       case 'Timetable':
         Navigator.push(context, MaterialPageRoute(
-          builder: (_) => const FilteredUpdatesPage(type: 'timetable', title: 'Timetable')));
+          builder: (_) => FilteredUpdatesPage(type: 'timetable', title: 'Timetable')));
             
       case 'Question Paper':
           Navigator.push(context,
