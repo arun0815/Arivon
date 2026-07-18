@@ -1,11 +1,11 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import '../theme/app_colors.dart'; // adjust path to match your project
-import '../core/models/update_model.dart'; // adjust path to match your project
+import '../../../core/theme/app_colors.dart';       // lib/features/updates/ → lib/core/theme/
+import '../../../core/models/update_models.dart';   // lib/features/updates/ → lib/core/models/
 
 class FilteredUpdatesPage extends StatefulWidget {
-  final String type; // e.g. 'attendance', 'internal', 'timetable'
+  final String type;  // e.g. 'attendance', 'internal', 'timetable'
   final String title; // e.g. 'Attendance'
 
   const FilteredUpdatesPage({
@@ -32,7 +32,7 @@ class _FilteredUpdatesPageState extends State<FilteredUpdatesPage> {
   Future<void> _fetch() async {
     setState(() {
       _loading = true;
-      _error = null;
+      _error   = null;
     });
     try {
       final res = await http
@@ -45,12 +45,12 @@ class _FilteredUpdatesPageState extends State<FilteredUpdatesPage> {
 
       final decoded = jsonDecode(res.body);
 
-      // API shape: { "success": true, "data": [...] }
       if (decoded is Map && decoded['success'] != true) {
         throw Exception(decoded['message'] ?? 'Request failed');
       }
 
-      final List rawList = decoded is List ? decoded : (decoded['data'] ?? []);
+      final List rawList =
+          decoded is List ? decoded : (decoded['data'] ?? []);
 
       final all = rawList
           .map((e) => UpdateItem.fromJson(e as Map<String, dynamic>))
@@ -62,28 +62,26 @@ class _FilteredUpdatesPageState extends State<FilteredUpdatesPage> {
         ..sort((a, b) => b.createdAt.compareTo(a.createdAt));
 
       setState(() {
-        _items = filtered;
+        _items   = filtered;
         _loading = false;
       });
     } catch (e) {
       setState(() {
-        _error = 'Failed to load updates. Please try again.';
+        _error   = 'Failed to load updates. Please try again.';
         _loading = false;
       });
     }
   }
 
-  bool _isDark(BuildContext ctx) => Theme.of(ctx).brightness == Brightness.dark;
-
   @override
   Widget build(BuildContext context) {
-    final style = typeStyleFor(widget.type);
-    final isDark = _isDark(context);
-    final scaffoldBg = isDark ? AppColors.darkBg : AppColors.bg;
-    final headerBg = isDark ? AppColors.darkSurface : AppColors.white;
-    final textColor = isDark ? AppColors.darkText : AppColors.text;
-    final textSec = isDark ? AppColors.darkTextSec : AppColors.textSec;
-    final borderColor = isDark ? AppColors.darkBorder : AppColors.border;
+    final style       = typeStyleFor(widget.type);
+    final isDark      = Theme.of(context).brightness == Brightness.dark;
+    final scaffoldBg  = isDark ? AppColors.darkBg      : AppColors.bg;
+    final headerBg    = isDark ? AppColors.darkSurface  : AppColors.white;
+    final textColor   = isDark ? AppColors.darkText     : AppColors.text;
+    final textSec     = isDark ? AppColors.darkTextSec  : AppColors.textSec;
+    final borderColor = isDark ? AppColors.darkBorder   : AppColors.border;
 
     return Scaffold(
       backgroundColor: scaffoldBg,
@@ -115,7 +113,8 @@ class _FilteredUpdatesPageState extends State<FilteredUpdatesPage> {
                     : ListView.separated(
                         padding: const EdgeInsets.all(16),
                         itemCount: _items.length,
-                        separatorBuilder: (_, __) => const SizedBox(height: 12),
+                        separatorBuilder: (_, __) =>
+                            const SizedBox(height: 12),
                         itemBuilder: (ctx, i) =>
                             _UpdateCard(item: _items[i], style: style),
                       ),
@@ -124,19 +123,20 @@ class _FilteredUpdatesPageState extends State<FilteredUpdatesPage> {
   }
 }
 
+// ─── Update Card ──────────────────────────────────────────────────────────────
 class _UpdateCard extends StatelessWidget {
   final UpdateItem item;
-  final TypeStyle style;
+  final TypeStyle  style;
   const _UpdateCard({required this.item, required this.style});
 
   @override
   Widget build(BuildContext context) {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
-    final surface = isDark ? AppColors.darkCard : AppColors.white;
-    final border = isDark ? AppColors.darkBorder : AppColors.border;
-    final text = isDark ? AppColors.darkText : AppColors.text;
+    final isDark  = Theme.of(context).brightness == Brightness.dark;
+    final surface = isDark ? AppColors.darkCard    : AppColors.white;
+    final border  = isDark ? AppColors.darkBorder  : AppColors.border;
+    final text    = isDark ? AppColors.darkText    : AppColors.text;
     final textSec = isDark ? AppColors.darkTextSec : AppColors.textSec;
-    final iconBg = isDark && style.darkBg != null ? style.darkBg! : style.lightBg;
+    final iconBg  = (isDark && style.darkBg != null) ? style.darkBg! : style.lightBg;
 
     return Container(
       padding: const EdgeInsets.all(14),
@@ -148,14 +148,16 @@ class _UpdateCard extends StatelessWidget {
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          // Icon badge
           Container(
-            width: 42,
-            height: 42,
+            width: 42, height: 42,
             decoration: BoxDecoration(
-                color: iconBg, borderRadius: BorderRadius.circular(12)),
+                color: iconBg,
+                borderRadius: BorderRadius.circular(12)),
             child: Icon(style.icon, color: style.color, size: 20),
           ),
           const SizedBox(width: 12),
+
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -182,7 +184,7 @@ class _UpdateCard extends StatelessWidget {
                           color: AppColors.rose.withOpacity(0.12),
                           borderRadius: BorderRadius.circular(6),
                         ),
-                        child: const Text(
+                        child: Text(
                           'Important',
                           style: TextStyle(
                               fontSize: 9,
@@ -195,7 +197,8 @@ class _UpdateCard extends StatelessWidget {
                 const SizedBox(height: 4),
                 Text(
                   item.description,
-                  style: TextStyle(fontSize: 12, color: textSec, height: 1.4),
+                  style:
+                      TextStyle(fontSize: 12, color: textSec, height: 1.4),
                   maxLines: 2,
                   overflow: TextOverflow.ellipsis,
                 ),
@@ -211,6 +214,7 @@ class _UpdateCard extends StatelessWidget {
   }
 }
 
+// ─── Empty State ──────────────────────────────────────────────────────────────
 class _EmptyState extends StatelessWidget {
   final String title;
   final IconData icon;
@@ -234,6 +238,7 @@ class _EmptyState extends StatelessWidget {
   }
 }
 
+// ─── Error State ──────────────────────────────────────────────────────────────
 class _ErrorState extends StatelessWidget {
   final String message;
   final VoidCallback onRetry;
