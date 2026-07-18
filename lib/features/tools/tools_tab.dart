@@ -9,44 +9,34 @@ import '../results/results_page.dart';
 import '../feedback/feedback_tab.dart';
 import '../credits/credits_page.dart';
 import '../updates/updates_tab.dart';
+import '../../pages/filtered_updates_page.dart';
 import '../../pages/syllabus_page.dart';
 
 // ─── Theme helpers ────────────────────────────────────────────────────────────
-// Reads brightness from the ambient Theme (driven by your ThemeProvider).
-// No BuildContext extension tricks — just a simple helper used inline.
 bool _isDark(BuildContext ctx) =>
     Theme.of(ctx).brightness == Brightness.dark;
 
-// Card/surface background
 Color _surface(BuildContext ctx) =>
     _isDark(ctx) ? AppColors.darkCard : AppColors.white;
 
-// Page scaffold background
 Color _scaffold(BuildContext ctx) =>
     _isDark(ctx) ? AppColors.darkBg : AppColors.bg;
 
-// AppBar / header strip
 Color _header(BuildContext ctx) =>
     _isDark(ctx) ? AppColors.darkSurface : AppColors.white;
 
-// Dividers and borders
 Color _border(BuildContext ctx) =>
     _isDark(ctx) ? AppColors.darkBorder : AppColors.border;
 
-// Primary text
 Color _text(BuildContext ctx) =>
     _isDark(ctx) ? AppColors.darkText : AppColors.text;
 
-// Secondary text
 Color _textSec(BuildContext ctx) =>
     _isDark(ctx) ? AppColors.darkTextSec : AppColors.textSec;
 
-// Section label (uppercased category headings)
 Color _label(BuildContext ctx) =>
     _isDark(ctx) ? AppColors.darkTextTert : AppColors.textTert;
 
-// Icon container bg — uses your named dark-soft tokens where available,
-// falls back to the vivid color at 15% opacity for custom colors.
 Color _iconBg(BuildContext ctx, Color iconColor, Color lightBg, Color? darkBg) {
   if (!_isDark(ctx)) return lightBg;
   if (darkBg != null) return darkBg;
@@ -78,7 +68,6 @@ class ToolWebViewPage extends StatelessWidget {
           child: Container(height: 1, color: _border(context)),
         ),
       ),
-      // Replace with InAppWebView / webview_flutter when ready
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -96,8 +85,7 @@ class ToolWebViewPage extends StatelessWidget {
               padding: const EdgeInsets.symmetric(horizontal: 40),
               child: Text(url,
                   textAlign: TextAlign.center,
-                  style:
-                      TextStyle(fontSize: 12, color: _label(context))),
+                  style: TextStyle(fontSize: 12, color: _label(context))),
             ),
           ],
         ),
@@ -163,8 +151,7 @@ class ToolStaticPage extends StatelessWidget {
                     letterSpacing: -0.5)),
             const SizedBox(height: 8),
             Text('Coming soon',
-                style:
-                    TextStyle(fontSize: 13, color: _textSec(context))),
+                style: TextStyle(fontSize: 13, color: _textSec(context))),
           ],
         ),
       ),
@@ -176,9 +163,6 @@ class ToolStaticPage extends StatelessWidget {
 class ToolsTab extends StatelessWidget {
   const ToolsTab({super.key});
 
-  // Each _Tool carries: label, icon, vivid color, light-bg, dark-bg (nullable).
-  // Named AppColors dark-soft tokens are used where they exist;
-  // null means _iconBg() will derive one from the vivid color automatically.
   static final _tools = [
     // ── Calculators ──
     _Tool('GPA',           Icons.bar_chart_rounded,          AppColors.primary, AppColors.primarySoft, AppColors.darkPrimarySoft),
@@ -214,15 +198,12 @@ class ToolsTab extends StatelessWidget {
       backgroundColor: _scaffold(context),
       body: CustomScrollView(
         slivers: [
-          // ── Sticky Header ──
           SliverPersistentHeader(
             pinned: true,
             delegate: _ToolsHeaderDelegate(
               height: MediaQuery.of(context).padding.top + 90,
             ),
           ),
-
-          // ── Sections ──
           SliverPadding(
             padding: const EdgeInsets.all(16),
             sliver: SliverList(
@@ -236,8 +217,7 @@ class ToolsTab extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Padding(
-                          padding:
-                              const EdgeInsets.only(left: 2, bottom: 12),
+                          padding: const EdgeInsets.only(left: 2, bottom: 12),
                           child: Text(s.title.toUpperCase(),
                               style: TextStyle(
                                   fontSize: 11,
@@ -275,11 +255,8 @@ class _ToolsHeaderDelegate extends SliverPersistentHeaderDelegate {
   final double height;
   const _ToolsHeaderDelegate({required this.height});
 
-  @override
-  double get minExtent => height;
-
-  @override
-  double get maxExtent => height;
+  @override double get minExtent => height;
+  @override double get maxExtent => height;
 
   @override
   Widget build(BuildContext context, double shrinkOffset, bool overlapsContent) {
@@ -315,7 +292,7 @@ class _ToolsHeaderDelegate extends SliverPersistentHeaderDelegate {
       oldDelegate.height != height;
 }
 
-// ─── Section descriptor (const — no runtime allocation) ──────────────────────
+// ─── Section descriptor ───────────────────────────────────────────────────────
 class _Section {
   final String title;
   final int start, end;
@@ -331,61 +308,55 @@ class _ToolCard extends StatelessWidget {
     switch (tool.label) {
       case 'Contact Us':
         Navigator.push(context,
-            MaterialPageRoute(builder: (_) =>  ContactUsPage()));
-
+            MaterialPageRoute(builder: (_) => ContactUsPage()));
       case 'Notes':
         Navigator.push(context,
-            MaterialPageRoute(builder: (_) =>  DepartmentsPage()));
-
+            MaterialPageRoute(builder: (_) => DepartmentsPage()));
       case 'Result':
         Navigator.push(context,
-            MaterialPageRoute(builder : (_) =>  ResultsPage()));
-            
+            MaterialPageRoute(builder: (_) => ResultsPage()));
       case 'Percentage':
         Navigator.push(context,
-            MaterialPageRoute(builder : (_) =>  PercentagePage()));
-
+            MaterialPageRoute(builder: (_) => PercentagePage()));
       case 'Cutoff':
         Navigator.push(context,
-            MaterialPageRoute(builder : (_) =>  CutOffPage()));
-
+            MaterialPageRoute(builder: (_) => CutOffPage()));
       case 'Marks':
         Navigator.push(context,
-            MaterialPageRoute(builder : (_) =>  MarksPage()));
-
+            MaterialPageRoute(builder: (_) => MarksPage()));
       case 'Feedback':
         Navigator.push(context,
-            MaterialPageRoute(builder : (_) =>  FeedbackTab()));
+            MaterialPageRoute(builder: (_) => FeedbackTab()));
       case 'Credits':
         Navigator.push(context,
-            MaterialPageRoute(builder : (_) =>  CreditsPage()));
-
+            MaterialPageRoute(builder: (_) => CreditsPage()));
       case 'Updates':
         Navigator.push(context,
-            MaterialPageRoute(builder : (_) =>  UpdatesTab()));
-            
+            MaterialPageRoute(builder: (_) => UpdatesTab()));
       case 'Syllabus':
         Navigator.push(context,
-            MaterialPageRoute(builder : (_) =>  SyllabusPage()));
-
+            MaterialPageRoute(builder: (_) => SyllabusPage()));
       case 'Attendance':
-        Navigator.push(context, MaterialPageRoute(
-            builder: (_) => FilteredUpdatesPage(type: 'attendance', title: 'Attendance')));
-    
+        Navigator.push(context,
+            MaterialPageRoute(
+                builder: (_) => FilteredUpdatesPage(
+                    type: 'attendance', title: 'Attendance')));
       case 'Internal':
-        Navigator.push(context, MaterialPageRoute(
-          builder: (_) => FilteredUpdatesPage(type: 'internal', title: 'Internal')));
-    
+        Navigator.push(context,
+            MaterialPageRoute(
+                builder: (_) => FilteredUpdatesPage(
+                    type: 'internal', title: 'Internal')));
       case 'Timetable':
-        Navigator.push(context, MaterialPageRoute(
-          builder: (_) => FilteredUpdatesPage(type: 'timetable', title: 'Timetable')));
-            
+        Navigator.push(context,
+            MaterialPageRoute(
+                builder: (_) => FilteredUpdatesPage(
+                    type: 'timetable', title: 'Timetable')));
       case 'Question Paper':
-          Navigator.push(context,
-              MaterialPageRoute(
-                  builder: (_) => ToolWebViewPage(
-                      title: tool.label,
-                      url: 'https://myarivon.in/question-papers')));
+        Navigator.push(context,
+            MaterialPageRoute(
+                builder: (_) => ToolWebViewPage(
+                    title: tool.label,
+                    url: 'https://myarivon.in/question-papers')));
       default:
         Navigator.push(context,
             MaterialPageRoute(
@@ -447,6 +418,6 @@ class _Tool {
   final IconData icon;
   final Color color;
   final Color lightBg;
-  final Color? darkBg; // null → auto-derived in _iconBg()
+  final Color? darkBg;
   const _Tool(this.label, this.icon, this.color, this.lightBg, this.darkBg);
 }
