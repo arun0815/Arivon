@@ -10,6 +10,7 @@ import '../feedback/feedback_tab.dart';
 import '../credits/credits_page.dart';
 import '../updates/updates_tab.dart';
 import '../../pages/filtered_updates_page.dart';
+import '../webview/webview_screen.dart';
 import '../../pages/syllabus_page.dart';
 
 // ─── Theme helpers ────────────────────────────────────────────────────────────
@@ -354,7 +355,7 @@ class _ToolCard extends StatelessWidget {
       case 'Question Paper':
         Navigator.push(context,
             MaterialPageRoute(
-                builder: (_) => ToolWebViewPage(
+                builder: (_) => WebViewScreen(
                     title: tool.label,
                     url: 'https://myarivon.in/question-papers')));
       default:
