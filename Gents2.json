@@ -1,0 +1,90 @@
+{
+  "block": 42,
+  "revno": 5,
+  "total_mw": 940,
+  "frequency": 49.98,
+  "timestamp": "21-07-2026 14:35:00",
+
+  "stage1_mw": 375,
+  "stage2_mw": 565,
+
+  "stale": false,
+  "stale_warning": null,
+
+  "units": [
+    { "id": 1, "mw": 180, "mills": [1, 1, 0, 1, 2, 1] },
+    { "id": 2, "mw": 195, "mills": [1, 1, 1, 1, 0, 1] },
+    { "id": 3, "mw": 0,   "mills": [0, 0, 0, 0, 0, 0] },
+    { "id": 4, "mw": 210, "mills": [1, 1, 1, 1, 1, 1] },
+    { "id": 5, "mw": 205, "mills": [1, 1, 1, 0, 1, 1] },
+    { "id": 6, "mw": 150, "mills": [1, 1, 0, 1, 1, 0] },
+    { "id": 7, "mw": null, "mills": [0, 0, 0, 0, 0, 0] }
+  ],
+
+  "ex_bus": {
+    "stg1": { "dc": 400, "sch": 395, "actual": 398, "aux_cons": 25 },
+    "stg2": { "dc": 850, "sch": 840, "actual": 835, "aux_cons": 20 }
+  },
+
+  "ex_mines": {
+    "stg1": { "dc": 620, "sch": 610, "actual": 615, "mc": 40, "ag_sg_pct": 100.8 },
+    "stg2": { "dc": 830, "sch": 820, "actual": 810, "mc": 55, "ag_sg_pct": 98.8 }
+  },
+
+  "schedule": [
+    { "block": 1, "dc_1": 181, "sch_1": 176, "dc_2": 401, "sch_2": 396,
+      "stale_dc": false, "stale_sch": false,
+      "rev_stale_1": false, "rev_stale_2": false,
+      "data_revno_1": 5, "data_revno_2": 5 },
+    { "block": 2, "dc_1": 182, "sch_1": 177, "dc_2": 402, "sch_2": 397,
+      "stale_dc": false, "stale_sch": false,
+      "rev_stale_1": false, "rev_stale_2": false,
+      "data_revno_1": 5, "data_revno_2": 5 },
+    { "block": 3, "dc_1": 183, "sch_1": 178, "dc_2": 403, "sch_2": 398,
+      "stale_dc": true, "stale_sch": false,
+      "rev_stale_1": false, "rev_stale_2": false,
+      "data_revno_1": 5, "data_revno_2": 5 },
+    { "block": 4, "dc_1": 184, "sch_1": 179, "dc_2": 404, "sch_2": 399,
+      "stale_dc": false, "stale_sch": false,
+      "rev_stale_1": false, "rev_stale_2": false,
+      "data_revno_1": 5, "data_revno_2": 5 },
+    { "block": 5, "dc_1": 185, "sch_1": 180, "dc_2": 405, "sch_2": 400,
+      "stale_dc": false, "stale_sch": false,
+      "rev_stale_1": true, "rev_stale_2": false,
+      "data_revno_1": 3, "data_revno_2": 5 },
+    { "block": 6, "dc_1": 186, "sch_1": 181, "dc_2": 406, "sch_2": 401,
+      "stale_dc": false, "stale_sch": false,
+      "rev_stale_1": false, "rev_stale_2": false,
+      "data_revno_1": 5, "data_revno_2": 5 },
+    { "block": 7, "dc_1": 187, "sch_1": 182, "dc_2": 407, "sch_2": 402,
+      "stale_dc": false, "stale_sch": false,
+      "rev_stale_1": false, "rev_stale_2": false,
+      "data_revno_1": 5, "data_revno_2": 5 },
+    { "block": 8, "dc_1": 188, "sch_1": 175, "dc_2": 408, "sch_2": 403,
+      "stale_dc": false, "stale_sch": false,
+      "rev_stale_1": false, "rev_stale_2": false,
+      "data_revno_1": 5, "data_revno_2": 5 },
+    { "block": 9, "dc_1": 189, "sch_1": 176, "dc_2": 409, "sch_2": 404,
+      "stale_dc": false, "stale_sch": true,
+      "rev_stale_1": false, "rev_stale_2": false,
+      "data_revno_1": 5, "data_revno_2": 5 },
+    { "block": 10, "dc_1": 180, "sch_1": 177, "dc_2": 410, "sch_2": 405,
+      "stale_dc": false, "stale_sch": false,
+      "rev_stale_1": false, "rev_stale_2": false,
+      "data_revno_1": 5, "data_revno_2": 5 },
+    { "block": 11, "dc_1": 181, "sch_1": 178, "dc_2": 411, "sch_2": 406,
+      "stale_dc": false, "stale_sch": false,
+      "rev_stale_1": false, "rev_stale_2": false,
+      "data_revno_1": 5, "data_revno_2": 5 },
+    { "block": 12, "dc_1": 182, "sch_1": 179, "dc_2": 412, "sch_2": 407,
+      "stale_dc": false, "stale_sch": false,
+      "rev_stale_1": false, "rev_stale_2": false,
+      "data_revno_1": 5, "data_revno_2": 5 }
+  ],
+
+  "fuel_stock": {
+    "date": "21-07-2026",
+    "lignite": { "stock": 125000, "receipt": 8200, "transfer": 500 },
+    "fo": { "stock": 850, "receipt": 40, "cons": 12 }
+  }
+}
