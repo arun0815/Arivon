@@ -124,7 +124,7 @@ class UserProfile {
 
 // ── ProfileService ────────────────────────────────────────────────────────────
 class ProfileService {
-  static const String _baseUrl  = 'https://myarivon.in/api/profile';
+  static const String _baseUrl  = 'https://www.myarivon.in/api/profile';
   static const String _cacheKey = 'cached_profile';
   static const String _avatarKey = 'selected_avatar';
 
