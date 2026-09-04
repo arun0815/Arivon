@@ -69,8 +69,9 @@ class _WebViewScreenState extends State<WebViewScreen> {
               setState(() { _isLoading = false; _hasError = true; });
             }
           },
-          onHttpError: (error) {
-            if ((error.response?.statusCode ?? 0) >= 400) {
+         onHttpError: (error) {
+            final isMainFrame = error.request?.isMainFrame ?? true;
+            if (isMainFrame && (error.response?.statusCode ?? 0) >= 400) {
               setState(() { _isLoading = false; _hasError = true; });
             }
           },
