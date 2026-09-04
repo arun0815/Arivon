@@ -32,51 +32,45 @@ class _WebViewScreenState extends State<WebViewScreen> {
         'AppleWebKit/537.36 (KHTML, like Gecko) '
         'Chrome/120.0.0.0 Mobile Safari/537.36',
       )
-      ..setNavigationDelegate(
-        NavigationDelegate(
-          onProgress: (p) => setState(() => _loadingProgress = p),
-          onPageStarted: (_) => setState(() {
-            _isLoading = true;
-            _hasError  = false;
-          }),
-          onPageFinished: (_) {
-            setState(() => _isLoading = false);
-            final isDark = _isDark;
-            _controller.runJavaScript('''
-              (function() {
-                try {
-                  var header = document.querySelector('header');
-                  if (header) header.style.display = 'none';
-                  var nav = document.querySelector('nav');
-                  if (nav) nav.style.display = 'none';
-                  ${isDark ? '''
-                  var style = document.createElement('style');
-                  style.id = '__arivon_dark__';
-                  style.innerHTML = \`
-                    html { filter: invert(1) hue-rotate(180deg) !important; background: #111318 !important; }
-                    img, video, iframe, canvas, svg, picture { filter: invert(1) hue-rotate(180deg) !important; }
-                  \`;
-                  if (!document.getElementById('__arivon_dark__')) {
-                    document.head.appendChild(style);
-                  }
-                  ''' : ''}
-                } catch(e) {}
-              })();
-            ''');
-          },
-          onWebResourceError: (error) {
-            if (error.isForMainFrame ?? true) {
-              setState(() { _isLoading = false; _hasError = true; });
+     ..setNavigationDelegate(
+  NavigationDelegate(
+    onProgress: (p) => setState(() => _loadingProgress = p),
+    onPageStarted: (_) => setState(() {
+      _isLoading = true;
+      _hasError  = false;
+    }),
+    onPageFinished: (_) {
+      setState(() => _isLoading = false);
+      final isDark = _isDark;
+      _controller.runJavaScript('''
+        (function() {
+          try {
+            var header = document.querySelector('header');
+            if (header) header.style.display = 'none';
+            var nav = document.querySelector('nav');
+            if (nav) nav.style.display = 'none';
+            ${isDark ? '''
+            var style = document.createElement('style');
+            style.id = '__arivon_dark__';
+            style.innerHTML = \`
+              html { filter: invert(1) hue-rotate(180deg) !important; background: #111318 !important; }
+              img, video, iframe, canvas, svg, picture { filter: invert(1) hue-rotate(180deg) !important; }
+            \`;
+            if (!document.getElementById('__arivon_dark__')) {
+              document.head.appendChild(style);
             }
-          },
-         onHttpError: (error) {
-            final isMainFrame = error.request?.isMainFrame ?? true;
-            if (isMainFrame && (error.response?.statusCode ?? 0) >= 400) {
-              setState(() { _isLoading = false; _hasError = true; });
-            }
-          },
-        ),
-      )
+            ''' : ''}
+          } catch(e) {}
+        })();
+      ''');
+    },
+    onWebResourceError: (error) {
+      if (error.isForMainFrame ?? true) {
+        setState(() { _isLoading = false; _hasError = true; });
+      }
+    },
+  ),
+)
       ..loadRequest(
         Uri.parse(widget.url),
         headers: {
