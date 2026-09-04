@@ -569,7 +569,7 @@ class _QuickAccess extends StatelessWidget {
     const _QAItem('Results',  'Check results',  AppColors.violet,  AppColors.violetSoft,
       Icons.emoji_events_outlined),
     const _QAItem('QP',       'Past papers',    AppColors.teal,    AppColors.tealSoft,
-      Icons.description_outlined, url: 'eduhub-tau-rosy.vercel.app/question-papers'),
+      Icons.description_outlined, url: 'https://www.myarivon.in/question-papers'),
     const _QAItem('Syllabus', 'R2021',          AppColors.amber,   AppColors.amberSoft,
       Icons.format_align_left_rounded),
     const _QAItem('GPA Calc', 'Calculate',      AppColors.success, AppColors.successSoft,
