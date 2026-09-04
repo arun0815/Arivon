@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:flutter/foundation.dart';
 
 // ── Subscription model ────────────────────────────────────────────────────────
 class UserSubscription {
@@ -181,38 +182,46 @@ class ProfileService {
   }
 
   // ✅ dateOfBirth added
-  static Future<UserProfile?> updateProfile({
-    required String email,
-    String? name,
-    String? institute,
-    String? department,
-    String? semester,
-    String? dateOfBirth,
-  }) async {
-    try {
-      final response = await http.put(
-        Uri.parse('$_baseUrl?email=$email'),
-        headers: {'Content-Type': 'application/json'},
-        body: jsonEncode({
-          if (name != null)        'name': name,
-          if (institute != null)   'institute': institute,
-          if (department != null)  'department': department,
-          if (semester != null)    'semester': semester,
-          if (dateOfBirth != null) 'dateOfBirth': dateOfBirth,
-        }),
-      );
-      final data = jsonDecode(response.body);
-      if (data['success'] == true) {
-        final prefs   = await SharedPreferences.getInstance();
-        final avatar  = prefs.getString(_avatarKey);
-        final profile = UserProfile.fromJson(data['data'])
-            .copyWith(selectedAvatar: avatar);
-        await _cacheProfile(profile);
-        return profile;
-      }
-      return null;
-    } catch (e) {
-      return null;
+static Future<UserProfile?> updateProfile({
+  required String email,
+  String? name,
+  String? institute,
+  String? department,
+  String? semester,
+  String? dateOfBirth,
+}) async {
+  try {
+    final response = await http.put(
+      Uri.parse('$_baseUrl?email=$email'),
+      headers: {'Content-Type': 'application/json'},
+      body: jsonEncode({
+        if (name != null)        'name': name,
+        if (institute != null)   'institute': institute,
+        if (department != null)  'department': department,
+        if (semester != null)    'semester': semester,
+        if (dateOfBirth != null) 'dateOfBirth': dateOfBirth,
+      }),
+    );
+
+    debugPrint('updateProfile status: ${response.statusCode}');
+    debugPrint('updateProfile body: ${response.body}');
+
+    if (response.statusCode != 200) return null;
+
+    final data = jsonDecode(response.body);
+    if (data['success'] == true) {
+      final prefs   = await SharedPreferences.getInstance();
+      final avatar  = prefs.getString(_avatarKey);
+      final profile = UserProfile.fromJson(data['data'])
+          .copyWith(selectedAvatar: avatar);
+      await _cacheProfile(profile);
+      return profile;
     }
+    debugPrint('updateProfile server error: ${data['message'] ?? data['error']}');
+    return null;
+  } catch (e, st) {
+    debugPrint('updateProfile exception: $e\n$st');
+    return null;
   }
+}
 }
