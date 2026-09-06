@@ -1,5 +1,8 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:webview_flutter/webview_flutter.dart';
+import 'package:url_launcher/url_launcher.dart';
 import '../../../core/theme/app_colors.dart';
 
 class WebViewScreen extends StatefulWidget {
@@ -18,9 +21,47 @@ class _WebViewScreenState extends State<WebViewScreen> {
   bool _hasError  = false;
   int  _loadingProgress = 0;
 
-  // ✅ FIX: isDark computed inside build, passed down to _Shimmer
+  static const MethodChannel _customTabChannel =
+      MethodChannel('com.arivon.app/customtabs');
+
   bool get _isDark =>
       Theme.of(context).brightness == Brightness.dark;
+
+  // ✅ Detect links WebView can't render inline (pdf/downloads/tel/mail/etc.)
+  bool _shouldOpenExternally(String url) {
+    final lower = url.toLowerCase();
+    return lower.endsWith('.pdf') ||
+        lower.contains('.pdf?') ||
+        lower.contains('/download') ||
+        lower.contains('blob.core.windows.net') ||
+        lower.startsWith('tel:') ||
+        lower.startsWith('mailto:') ||
+        lower.startsWith('whatsapp:') ||
+        lower.startsWith('intent:');
+  }
+
+  // ✅ Opens link in a colored Chrome Custom Tab (Android) via MethodChannel.
+  // Falls back to url_launcher for iOS / non-Android or if native call fails.
+  Future<void> _openExternally(String url) async {
+    if (Platform.isAndroid) {
+      try {
+        final ok = await _customTabChannel.invokeMethod<bool>('openCustomTab', {
+          'url': url,
+          'toolbarColor':
+              '#${AppColors.primary.value.toRadixString(16).substring(2)}',
+        });
+        if (ok == true) return;
+      } catch (_) {
+        // fall through to url_launcher fallback below
+      }
+    }
+
+    try {
+      await launchUrl(Uri.parse(url), mode: LaunchMode.externalApplication);
+    } catch (e) {
+      _controller.loadRequest(Uri.parse(url));
+    }
+  }
 
   @override
   void initState() {
@@ -32,45 +73,64 @@ class _WebViewScreenState extends State<WebViewScreen> {
         'AppleWebKit/537.36 (KHTML, like Gecko) '
         'Chrome/120.0.0.0 Mobile Safari/537.36',
       )
-     ..setNavigationDelegate(
-  NavigationDelegate(
-    onProgress: (p) => setState(() => _loadingProgress = p),
-    onPageStarted: (_) => setState(() {
-      _isLoading = true;
-      _hasError  = false;
-    }),
-    onPageFinished: (_) {
-      setState(() => _isLoading = false);
-      final isDark = _isDark;
-      _controller.runJavaScript('''
-        (function() {
-          try {
-            var header = document.querySelector('header');
-            if (header) header.style.display = 'none';
-            var nav = document.querySelector('nav');
-            if (nav) nav.style.display = 'none';
-            ${isDark ? '''
-            var style = document.createElement('style');
-            style.id = '__arivon_dark__';
-            style.innerHTML = \`
-              html { filter: invert(1) hue-rotate(180deg) !important; background: #111318 !important; }
-              img, video, iframe, canvas, svg, picture { filter: invert(1) hue-rotate(180deg) !important; }
-            \`;
-            if (!document.getElementById('__arivon_dark__')) {
-              document.head.appendChild(style);
+      ..setNavigationDelegate(
+        NavigationDelegate(
+          onProgress: (p) => setState(() => _loadingProgress = p),
+          onPageStarted: (_) => setState(() {
+            _isLoading = true;
+            _hasError  = false;
+          }),
+          // ✅ Intercept pdf/download links before WebView tries (and fails) to load them
+          onNavigationRequest: (request) {
+            if (_shouldOpenExternally(request.url)) {
+              _openExternally(request.url);
+              return NavigationDecision.prevent;
             }
-            ''' : ''}
-          } catch(e) {}
-        })();
-      ''');
-    },
-    onWebResourceError: (error) {
-      if (error.isForMainFrame ?? true) {
-        setState(() { _isLoading = false; _hasError = true; });
-      }
-    },
-  ),
-)
+            return NavigationDecision.navigate;
+          },
+          onPageFinished: (_) {
+            setState(() => _isLoading = false);
+            final isDark = _isDark;
+            _controller.runJavaScript('''
+              (function() {
+                try {
+                  var header = document.querySelector('header');
+                  if (header) header.style.display = 'none';
+                  var nav = document.querySelector('nav');
+                  if (nav) nav.style.display = 'none';
+
+                  // ✅ Hide footer (tag + common class/id patterns)
+                  var footer = document.querySelector('footer');
+                  if (footer) footer.style.display = 'none';
+                  var footerSelectors = ['.footer', '#footer', '.site-footer', '[class*="Footer"]'];
+                  footerSelectors.forEach(function(sel) {
+                    document.querySelectorAll(sel).forEach(function(el) {
+                      el.style.display = 'none';
+                    });
+                  });
+
+                  ${isDark ? '''
+                  var style = document.createElement('style');
+                  style.id = '__arivon_dark__';
+                  style.innerHTML = \`
+                    html { filter: invert(1) hue-rotate(180deg) !important; background: #111318 !important; }
+                    img, video, iframe, canvas, svg, picture { filter: invert(1) hue-rotate(180deg) !important; }
+                  \`;
+                  if (!document.getElementById('__arivon_dark__')) {
+                    document.head.appendChild(style);
+                  }
+                  ''' : ''}
+                } catch(e) {}
+              })();
+            ''');
+          },
+          onWebResourceError: (error) {
+            if (error.isForMainFrame ?? true) {
+              setState(() { _isLoading = false; _hasError = true; });
+            }
+          },
+        ),
+      )
       ..loadRequest(
         Uri.parse(widget.url),
         headers: {
@@ -197,7 +257,6 @@ class _WebViewScreenState extends State<WebViewScreen> {
                 : Stack(
                     children: [
                       WebViewWidget(controller: _controller),
-                      // ✅ FIX: pass isDark as parameter, no const
                       if (_isLoading && _loadingProgress < 30)
                         _Shimmer(isDark: isDark),
                     ],
@@ -264,11 +323,10 @@ class _ErrorView extends StatelessWidget {
 }
 
 // ─── Shimmer ──────────────────────────────────────────────────────────────────
-// ✅ FIX: isDark parameter added, no longer const constructor
 class _Shimmer extends StatefulWidget {
   final bool isDark;
 
-  const _Shimmer({required this.isDark});   // ← required, no default
+  const _Shimmer({required this.isDark});
 
   @override
   State<_Shimmer> createState() => _ShimmerState();
