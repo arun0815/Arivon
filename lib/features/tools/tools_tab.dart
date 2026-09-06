@@ -4,6 +4,7 @@ import '../contactus/contact_us_page.dart';
 import '../notes/departments_page.dart';
 import '../calculators/percentage_page.dart';
 import '../calculators/cut_off_page.dart';
+import '../contribute/contribute_page.dart';
 import '../calculators/marks_page.dart';
 import '../results/results_page.dart';
 import '../feedback/feedback_tab.dart';
@@ -331,9 +332,9 @@ class _ToolCard extends StatelessWidget {
       case 'Credits':
         Navigator.push(context,
             MaterialPageRoute(builder: (_) => CreditsPage()));
-      case 'Updates':
+      case 'Contribute':
         Navigator.push(context,
-            MaterialPageRoute(builder: (_) => UpdatesTab()));
+            MaterialPageRoute(builder: (_) => ContributionService()));
       case 'Syllabus':
         Navigator.push(context,
             MaterialPageRoute(builder: (_) => SyllabusPage()));
