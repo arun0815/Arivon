@@ -334,7 +334,7 @@ class _ToolCard extends StatelessWidget {
             MaterialPageRoute(builder: (_) => CreditsPage()));
       case 'Contribute':
         Navigator.push(context,
-            MaterialPageRoute(builder: (_) => ContributionService()));
+            MaterialPageRoute(builder: (_) => ContributePage()));
       case 'Syllabus':
         Navigator.push(context,
             MaterialPageRoute(builder: (_) => SyllabusPage()));
