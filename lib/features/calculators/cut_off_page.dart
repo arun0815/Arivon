@@ -46,8 +46,8 @@ class _CutOffPageState extends State<CutOffPage> {
     if (maths == null || physics == null || chem == null) return;
 
     setState(() {
-      // ── Corrected formula: (Maths + Physics + Chemistry) ÷ 3 ──────
-      _result = (maths + physics + chem) / 3;
+      // ── Corrected formula: (Maths/2 + Physics/2 + Chemistry/2) ──────
+      _result = (maths + (physics/2) + (chem/2));
     });
   }
 
@@ -148,7 +148,7 @@ class _CutOffPageState extends State<CutOffPage> {
                                   fontWeight: FontWeight.w700, fontSize: 12)),
                           const SizedBox(height: 2),
                           Text(
-                            '(Maths + Physics + Chemistry) ÷ 3',
+                            '(Maths + (Physics/2) + (Chemistry/2)',
                             style: TextStyle(
                                 color: Colors.white.withOpacity(0.85),
                                 fontSize: 12,
@@ -180,7 +180,7 @@ class _CutOffPageState extends State<CutOffPage> {
                     Text('Enter HSC Marks',
                         style: TextStyle(fontSize: 13,
                             fontWeight: FontWeight.w700, color: tp)),
-                    Text('Out of 200 for each subject',
+                    Text('Out of 100 for each subject',
                         style: TextStyle(fontSize: 11, color: ts)),
                     const SizedBox(height: 14),
 
@@ -341,7 +341,7 @@ class _CutOffPageState extends State<CutOffPage> {
                             ),
                             const SizedBox(height: 6),
                             _BreakdownRow(
-                              label: 'Sum ÷ 3',
+                              label: 'Sum',
                               value: _result!.toStringAsFixed(2),
                               color: ts,
                               ts: ts,
