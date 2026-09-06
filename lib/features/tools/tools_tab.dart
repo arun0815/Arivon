@@ -184,7 +184,7 @@ class ToolsTab extends StatelessWidget {
 
     // ── Campus ──
     _Tool('Feedback',      Icons.rate_review_rounded,        AppColors.violet,  AppColors.violetSoft,  AppColors.darkVioletSoft),
-    _Tool('Updates',       Icons.campaign_rounded,           AppColors.amber,   AppColors.amberSoft,   AppColors.darkAmberSoft),
+    _Tool('Contribute',    Icons.campaign_rounded,           AppColors.amber,   AppColors.amberSoft,   AppColors.darkAmberSoft),
     _Tool('Contact Us',    Icons.mail_rounded,               AppColors.teal,    AppColors.tealSoft,    AppColors.darkTealSoft),
   ];
 
