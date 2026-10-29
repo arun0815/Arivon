@@ -94,13 +94,13 @@ class _PrivacyContent extends StatelessWidget {
         _Section(
           title: '8. Children\'s Privacy',
           body:
-              'EduHub is intended for users aged 13 and above. We do not knowingly collect personal information from children under 13. If we become aware that a child under 13 has provided us data, we will delete it promptly.',
+              'Arivon is intended for users aged 13 and above. We do not knowingly collect personal information from children under 13. If we become aware that a child under 13 has provided us data, we will delete it promptly.',
         ),
 
         _Section(
           title: '9. Changes to This Policy',
           body:
-              'We may update this Privacy Policy from time to time. We will notify you of any significant changes via in-app notification. Your continued use of EduHub after changes constitutes acceptance of the updated policy.',
+              'We may update this Privacy Policy from time to time. We will notify you of any significant changes via in-app notification. Your continued use of Arivon after changes constitutes acceptance of the updated policy.',
         ),
 
         _Section(
