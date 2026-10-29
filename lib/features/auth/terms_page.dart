@@ -52,13 +52,13 @@ class _TermsContent extends StatelessWidget {
         _Section(
           title: '1. Acceptance of Terms',
           body:
-              'By accessing or using EduHub, you agree to be bound by these Terms of Service. If you do not agree to these terms, please do not use our application.',
+              'By accessing or using Arivon, you agree to be bound by these Terms of Service. If you do not agree to these terms, please do not use our application.',
         ),
 
         _Section(
           title: '2. Use of the App',
           body:
-              'EduHub is an academic companion app for students. You agree to use the app only for lawful purposes and in a manner that does not infringe the rights of others. You must not misuse, disrupt, or attempt to gain unauthorized access to any part of the service.',
+              'Arivon is an academic companion app for students. You agree to use the app only for lawful purposes and in a manner that does not infringe the rights of others. You must not misuse, disrupt, or attempt to gain unauthorized access to any part of the service.',
         ),
 
         _Section(
@@ -76,13 +76,13 @@ class _TermsContent extends StatelessWidget {
         _Section(
           title: '5. Intellectual Property',
           body:
-              'All content, design, logos, and software in EduHub are the intellectual property of EduHub and its licensors. You may not copy, reproduce, or distribute any part of the app without prior written permission.',
+              'All content, design, logos, and software in Arivon are the intellectual property of Arivon and its licensors. You may not copy, reproduce, or distribute any part of the app without prior written permission.',
         ),
 
         _Section(
           title: '6. Limitation of Liability',
           body:
-              'EduHub is provided "as is" without warranties of any kind. We are not liable for any indirect, incidental, or consequential damages arising from your use of the app, including loss of data or academic performance.',
+              'Arivon is provided "as is" without warranties of any kind. We are not liable for any indirect, incidental, or consequential damages arising from your use of the app, including loss of data or academic performance.',
         ),
 
         _Section(
@@ -94,13 +94,13 @@ class _TermsContent extends StatelessWidget {
         _Section(
           title: '8. Changes to Terms',
           body:
-              'We may update these terms from time to time. Continued use of EduHub after changes means you accept the revised terms. We will notify users of significant changes via the app.',
+              'We may update these terms from time to time. Continued use of Arivon after changes means you accept the revised terms. We will notify users of significant changes via the app.',
         ),
 
         _Section(
           title: '9. Contact',
           body:
-              'For questions about these Terms, contact us at support@eduhub.app.',
+              'For questions about these Terms, contact us at support@myarivon.in.',
         ),
       ],
     );
