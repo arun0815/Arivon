@@ -293,137 +293,202 @@ return 'Still awake? That\'s between you and your sleep schedule 👀';
 }
 
 
+crossAxisAlignment: CrossAxisAlignment.start,
 // ── Semester card ─────────────────────────────────────────────────────────────
-class _SemesterCard extends StatelessWidget {
+class _SemesterCard extends StatefulWidget {
+  const _SemesterCard();
+
+  @override
+  State<_SemesterCard> createState() => _SemesterCardState();
+}
+
+class _Bubble {
+  final Offset pos;
+  final AnimationController ctrl;
+  _Bubble(this.pos, this.ctrl);
+}
+
+class _SemesterCardState extends State<_SemesterCard>
+    with TickerProviderStateMixin {
+  final List<_Bubble> _bubbles = [];
+  bool _pressed = false;
+
+  void _spawn(Offset pos) {
+    final c = AnimationController(
+        vsync: this, duration: const Duration(milliseconds: 900));
+    final b = _Bubble(pos, c);
+    setState(() => _bubbles.add(b));
+    c.forward().whenComplete(() {
+      if (!mounted) return;
+      setState(() => _bubbles.remove(b));
+      c.dispose();
+    });
+  }
+
+  @override
+  void dispose() {
+    for (final b in _bubbles) {
+      b.ctrl.dispose();
+    }
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     final profile = context.watch<ProfileProvider>().profile;
 
-    return Container(
-      height: 200,
-      decoration: BoxDecoration(
-        gradient: const LinearGradient(
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-          colors: [Color(0xFF1D4ED8), Color(0xFF0A84FF)],
-        ),
-        borderRadius: BorderRadius.circular(28),
-        boxShadow: [
-          BoxShadow(
-            color: const Color(0xFF1D4ED8).withOpacity(0.35),
-            blurRadius: 24,
-            offset: const Offset(0, 10),
-          ),
-        ],
-      ),
-      child: ClipRRect(
-        borderRadius: BorderRadius.circular(28),
-        child: Stack(
-          children: [
-            // Soft background circles
-            Positioned(
-              top: -30,
-              right: -20,
-              child: Container(
-                width: 160,
-                height: 160,
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  color: Colors.white.withOpacity(0.10),
+    return MouseRegion(
+      onEnter: (e) => _spawn(e.localPosition), // hover (web/desktop)
+      child: GestureDetector(
+        onTapDown: (d) {
+          setState(() => _pressed = true);
+          _spawn(d.localPosition);
+        },
+        onTapUp: (_) => setState(() => _pressed = false),
+        onTapCancel: () => setState(() => _pressed = false),
+        child: AnimatedScale(
+          scale: _pressed ? 0.97 : 1.0,
+          duration: const Duration(milliseconds: 150),
+          curve: Curves.easeOut,
+          child: Container(
+            height: 200,
+            decoration: BoxDecoration(
+              gradient: const LinearGradient(
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+                colors: [Color(0xFF1D4ED8), Color(0xFF0A84FF)],
+              ),
+              borderRadius: BorderRadius.circular(28),
+              boxShadow: [
+                BoxShadow(
+                  color: const Color(0xFF1D4ED8).withOpacity(0.35),
+                  blurRadius: 24,
+                  offset: const Offset(0, 10),
                 ),
-              ),
+              ],
             ),
-            Positioned(
-              bottom: -50,
-              right: 40,
-              child: Container(
-                width: 150,
-                height: 150,
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  color: Colors.white.withOpacity(0.07),
-                ),
-              ),
-            ),
-
-            // Illustration (bottom-right)
-            Positioned(
-              right: 0,
-              bottom: 0,
-              child: Image.asset(
-                'assets/images/human.png',
-                height: 150,
-                fit: BoxFit.contain,
-                errorBuilder: (_, __, ___) => const SizedBox.shrink(),
-              ),
-            ),
-
-            // Content
-            Padding(
-              padding: const EdgeInsets.fromLTRB(20, 20, 20, 18),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(28),
+              child: Stack(
                 children: [
-                  Row(
-                    children: [
-                      Container(
-                        width: 52,
-                        height: 52,
-                        decoration: BoxDecoration(
-                          color: Colors.white.withOpacity(0.18),
-                          borderRadius: BorderRadius.circular(16),
+                  Positioned(
+                    top: -30,
+                    right: -20,
+                    child: Container(
+                      width: 160,
+                      height: 160,
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        color: Colors.white.withOpacity(0.10),
+                      ),
+                    ),
+                  ),
+                  Positioned(
+                    bottom: -50,
+                    right: 40,
+                    child: Container(
+                      width: 150,
+                      height: 150,
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        color: Colors.white.withOpacity(0.07),
+                      ),
+                    ),
+                  ),
+
+                  // Bubble ripples
+                  for (final b in _bubbles)
+                    Positioned.fill(
+                      child: IgnorePointer(
+                        child: AnimatedBuilder(
+                          animation: b.ctrl,
+                          builder: (_, __) => CustomPaint(
+                            painter: _BubblePainter(b.pos, b.ctrl.value),
+                          ),
                         ),
-                        child: const Icon(Icons.school_rounded,
-                            color: Colors.white, size: 26),
                       ),
-                      const SizedBox(width: 14),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            'CURRENT SEMESTER',
-                            style: TextStyle(
-                              fontSize: 10,
-                              fontWeight: FontWeight.w700,
-                              letterSpacing: 1.2,
-                              color: Colors.white.withOpacity(0.7),
-                            ),
-                          ),
-                          const SizedBox(height: 2),
-                          Text(
-                            profile?.semester ?? '—',
-                            style: const TextStyle(
-                              fontSize: 26,
-                              fontWeight: FontWeight.w800,
-                              color: Colors.white,
-                              letterSpacing: -0.6,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ],
+                    ),
+
+                  // Illustration
+                  Positioned(
+                    right: 0,
+                    bottom: 0,
+                    child: Image.asset(
+                      'assets/images/human.png',
+                      height: 150,
+                      fit: BoxFit.contain,
+                      errorBuilder: (_, __, ___) => const SizedBox.shrink(),
+                    ),
                   ),
-                  const Spacer(),
-                  Container(
-                    height: 1,
-                    color: Colors.white.withOpacity(0.18),
-                    margin: const EdgeInsets.only(bottom: 12, right: 8),
-                  ),
-                  // Keep rows clear of the illustration
+
+                  // Content
                   Padding(
-                    padding: const EdgeInsets.only(right: 96),
+                    padding: const EdgeInsets.fromLTRB(20, 20, 20, 18),
                     child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        _InfoRow(
-                          icon: Icons.account_tree_outlined,
-                          label: 'Department',
-                          value: profile?.department ?? '—',
+                        Row(
+                          children: [
+                            Container(
+                              width: 52,
+                              height: 52,
+                              decoration: BoxDecoration(
+                                color: Colors.white.withOpacity(0.18),
+                                borderRadius: BorderRadius.circular(16),
+                              ),
+                              child: const Icon(Icons.school_rounded,
+                                  color: Colors.white, size: 26),
+                            ),
+                            const SizedBox(width: 14),
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  'CURRENT SEMESTER',
+                                  style: TextStyle(
+                                    fontSize: 10,
+                                    fontWeight: FontWeight.w700,
+                                    letterSpacing: 1.2,
+                                    color: Colors.white.withOpacity(0.7),
+                                  ),
+                                ),
+                                const SizedBox(height: 2),
+                                Text(
+                                  profile?.semester ?? '—',
+                                  style: const TextStyle(
+                                    fontSize: 26,
+                                    fontWeight: FontWeight.w800,
+                                    color: Colors.white,
+                                    letterSpacing: -0.6,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ],
                         ),
-                        const SizedBox(height: 10),
-                        _InfoRow(
-                          icon: Icons.location_city_rounded,
-                          label: 'Institute',
-                          value: profile?.institute ?? '—',
+                        const Spacer(),
+                        Container(
+                          height: 1,
+                          color: Colors.white.withOpacity(0.18),
+                          margin: const EdgeInsets.only(bottom: 12, right: 8),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.only(right: 96),
+                          child: Column(
+                            children: [
+                              _InfoRow(
+                                icon: Icons.account_tree_outlined,
+                                label: 'Department',
+                                value: profile?.department ?? '—',
+                              ),
+                              const SizedBox(height: 10),
+                              _InfoRow(
+                                icon: Icons.location_city_rounded,
+                                label: 'Institute',
+                                value: profile?.institute ?? '—',
+                              ),
+                            ],
+                          ),
                         ),
                       ],
                     ),
@@ -431,13 +496,50 @@ class _SemesterCard extends StatelessWidget {
                 ],
               ),
             ),
-          ],
+          ),
         ),
       ),
     );
   }
 }
 
+// ── Bubble painter ────────────────────────────────────────────────────────────
+class _BubblePainter extends CustomPainter {
+  final Offset center;
+  final double t;
+  _BubblePainter(this.center, this.t);
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final maxR = size.longestSide * 0.9;
+    // Two rings, the second one starts slightly later
+    for (final delay in [0.0, 0.18]) {
+      final p = ((t - delay) / (1 - delay)).clamp(0.0, 1.0);
+      if (p <= 0) continue;
+      final r = Curves.easeOut.transform(p) * maxR;
+      final fade = 1 - p;
+
+      canvas.drawCircle(
+        center,
+        r,
+        Paint()..color = Colors.white.withOpacity(0.18 * fade),
+      );
+      canvas.drawCircle(
+        center,
+        r,
+        Paint()
+          ..style = PaintingStyle.stroke
+          ..strokeWidth = 2
+          ..color = Colors.white.withOpacity(0.45 * fade),
+      );
+    }
+  }
+
+  @override
+  bool shouldRepaint(_BubblePainter old) => old.t != t || old.center != center;
+}
+
+// ── Info row (fixed width, marquee on overflow) ───────────────────────────────
 class _InfoRow extends StatelessWidget {
   final IconData icon;
   final String label, value;
@@ -459,9 +561,8 @@ class _InfoRow extends StatelessWidget {
           ),
         ),
         Expanded(
-          child: Text(
-            value,
-            overflow: TextOverflow.ellipsis,
+          child: _MarqueeText(
+            text: value,
             style: const TextStyle(
               fontSize: 13,
               fontWeight: FontWeight.w700,
@@ -470,6 +571,67 @@ class _InfoRow extends StatelessWidget {
           ),
         ),
       ],
+    );
+  }
+}
+
+// ── Marquee: static if it fits, scrolls right → left if it doesn't ───────────
+class _MarqueeText extends StatefulWidget {
+  final String text;
+  final TextStyle style;
+  const _MarqueeText({required this.text, required this.style});
+
+  @override
+  State<_MarqueeText> createState() => _MarqueeTextState();
+}
+
+class _MarqueeTextState extends State<_MarqueeText> {
+  final ScrollController _controller = ScrollController();
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) => _loop());
+  }
+
+  Future<void> _loop() async {
+    while (mounted) {
+      await Future.delayed(const Duration(seconds: 1));
+      if (!mounted || !_controller.hasClients) return;
+
+      final max = _controller.position.maxScrollExtent;
+      if (max <= 0) continue; // fits, nothing to scroll
+
+      // ~40 px per second
+      await _controller.animateTo(
+        max,
+        duration: Duration(milliseconds: (max * 25).round()),
+        curve: Curves.linear,
+      );
+      await Future.delayed(const Duration(seconds: 1));
+      if (!mounted || !_controller.hasClients) return;
+      _controller.jumpTo(0);
+    }
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return SingleChildScrollView(
+      controller: _controller,
+      scrollDirection: Axis.horizontal,
+      physics: const NeverScrollableScrollPhysics(),
+      child: Text(
+        widget.text,
+        maxLines: 1,
+        softWrap: false,
+        style: widget.style,
+      ),
     );
   }
 }
