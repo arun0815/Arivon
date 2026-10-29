@@ -76,13 +76,13 @@ class _HomeTabState extends State<HomeTab> {
                   delegate: SliverChildListDelegate([
                     const SizedBox(height: 8),
                     if (_isProfileComplete(profile)) ...[
-                      _SemesterCard(),
+                      const _SemesterCard(),
                       const SizedBox(height: 22),
                     ],
                     _QuickAccess(context: context),
                     const SizedBox(height: 22),
                     const _DailyCards(),
-                    const SizedBox(height: 22),   
+                    const SizedBox(height: 22),
                     const _RecentUpdates(),
                     const SizedBox(height: 40),
                   ]),
@@ -109,30 +109,30 @@ class _TopBar extends StatelessWidget {
 
   String getGreeting(String name) {
     final hour = DateTime.now().hour;
-if (hour >= 0  && hour < 1)  return 'The moon is working overtime 🌙';
-if (hour >= 1  && hour < 2)  return 'Sleep called. You ignored it 😴';
-if (hour >= 2  && hour < 3)  return 'Even owls are getting concerned 🦉';
-if (hour >= 3  && hour < 4)  return 'Plot twist: it\'s still night 🌌';
-if (hour >= 4  && hour < 5)  return 'Who wakes up this early? 😳';
-if (hour >= 5  && hour < 6)  return 'The early bird is showing off 🐦';
-if (hour >= 6  && hour < 7)  return 'Good Morning, sunshine ☀️';
-if (hour >= 7  && hour < 8)  return 'Time to pretend you\'re fully awake 😅';
-if (hour >= 8  && hour < 9)  return 'Breakfast first, world domination later 🍳';
-if (hour >= 9  && hour < 10) return 'Productivity.exe has started 🚀';
-if (hour >= 10 && hour < 11) return 'Looking busy is half the job 😎';
-if (hour >= 11 && hour < 12) return 'Almost lunch. Stay strong 💪';
-if (hour >= 12 && hour < 13) return 'Lunch acquired? 🍱';
-if (hour >= 13 && hour < 14) return 'Afternoon mode activated 🎯';
-if (hour >= 14 && hour < 15) return 'A nap sounds amazing right now 😴';
-if (hour >= 15 && hour < 16) return 'Coffee is carrying the team ☕';
-if (hour >= 16 && hour < 17) return 'You survived another hour 🎉';
-if (hour >= 17 && hour < 18) return 'Evening vibes loading 🌇';
-if (hour >= 18 && hour < 19) return 'The sun is clocking out 🌅';
-if (hour >= 19 && hour < 20) return 'Time to relax... or procrastinate 😏';
-if (hour >= 20 && hour < 21) return 'Today was something, wasn\'t it? 🤔';
-if (hour >= 21 && hour < 22) return 'Your bed is sending invitations 🛏️';
-if (hour >= 22 && hour < 23) return 'Night mode activated 🌙';
-return 'Still awake? That\'s between you and your sleep schedule 👀';
+    if (hour >= 0  && hour < 1)  return 'The moon is working overtime 🌙';
+    if (hour >= 1  && hour < 2)  return 'Sleep called. You ignored it 😴';
+    if (hour >= 2  && hour < 3)  return 'Even owls are getting concerned 🦉';
+    if (hour >= 3  && hour < 4)  return 'Plot twist: it\'s still night 🌌';
+    if (hour >= 4  && hour < 5)  return 'Who wakes up this early? 😳';
+    if (hour >= 5  && hour < 6)  return 'The early bird is showing off 🐦';
+    if (hour >= 6  && hour < 7)  return 'Good Morning, sunshine ☀️';
+    if (hour >= 7  && hour < 8)  return 'Time to pretend you\'re fully awake 😅';
+    if (hour >= 8  && hour < 9)  return 'Breakfast first, world domination later 🍳';
+    if (hour >= 9  && hour < 10) return 'Productivity.exe has started 🚀';
+    if (hour >= 10 && hour < 11) return 'Looking busy is half the job 😎';
+    if (hour >= 11 && hour < 12) return 'Almost lunch. Stay strong 💪';
+    if (hour >= 12 && hour < 13) return 'Lunch acquired? 🍱';
+    if (hour >= 13 && hour < 14) return 'Afternoon mode activated 🎯';
+    if (hour >= 14 && hour < 15) return 'A nap sounds amazing right now 😴';
+    if (hour >= 15 && hour < 16) return 'Coffee is carrying the team ☕';
+    if (hour >= 16 && hour < 17) return 'You survived another hour 🎉';
+    if (hour >= 17 && hour < 18) return 'Evening vibes loading 🌇';
+    if (hour >= 18 && hour < 19) return 'The sun is clocking out 🌅';
+    if (hour >= 19 && hour < 20) return 'Time to relax... or procrastinate 😏';
+    if (hour >= 20 && hour < 21) return 'Today was something, wasn\'t it? 🤔';
+    if (hour >= 21 && hour < 22) return 'Your bed is sending invitations 🛏️';
+    if (hour >= 22 && hour < 23) return 'Night mode activated 🌙';
+    return 'Still awake? That\'s between you and your sleep schedule 👀';
   }
 
   @override
@@ -185,39 +185,38 @@ return 'Still awake? That\'s between you and your sleep schedule 👀';
 
               // Notification bell
               GestureDetector(
-  onTap: () => Navigator.push(
-    context,
-    MaterialPageRoute(
-      builder: (_) => NotificationsPage(),
-    ),
-  ),
-  child: Stack(
-    children: [
-      _IconBtn(
-        icon: Icons.notifications_outlined,
-        isDark: isDark,
-      ),
-
-      if (hasUnreadNotifications)
-        Positioned(
-          top: 8,
-          right: 8,
-          child: Container(
-            width: 8,
-            height: 8,
-            decoration: BoxDecoration(
-              color: AppColors.rose,
-              shape: BoxShape.circle,
-              border: Border.all(
-                color: bgColor,
-                width: 1.5,
+                onTap: () => Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (_) => NotificationsPage(),
+                  ),
+                ),
+                child: Stack(
+                  children: [
+                    _IconBtn(
+                      icon: Icons.notifications_outlined,
+                      isDark: isDark,
+                    ),
+                    if (hasUnreadNotifications)
+                      Positioned(
+                        top: 8,
+                        right: 8,
+                        child: Container(
+                          width: 8,
+                          height: 8,
+                          decoration: BoxDecoration(
+                            color: AppColors.rose,
+                            shape: BoxShape.circle,
+                            border: Border.all(
+                              color: bgColor,
+                              width: 1.5,
+                            ),
+                          ),
+                        ),
+                      ),
+                  ],
+                ),
               ),
-            ),
-          ),
-        ),
-    ],
-  ),
-),
               const SizedBox(width: 9),
 
               // Avatar — tapping opens profile
@@ -292,8 +291,6 @@ return 'Still awake? That\'s between you and your sleep schedule 👀';
   }
 }
 
-
-crossAxisAlignment: CrossAxisAlignment.start,
 // ── Semester card ─────────────────────────────────────────────────────────────
 class _SemesterCard extends StatefulWidget {
   const _SemesterCard();
@@ -636,8 +633,7 @@ class _MarqueeTextState extends State<_MarqueeText> {
   }
 }
 
-
-
+// ── Daily cards ───────────────────────────────────────────────────────────────
 class _DailyCards extends StatelessWidget {
   const _DailyCards();
 
@@ -656,11 +652,11 @@ class _DailyCards extends StatelessWidget {
             iconBg: AppColors.violetSoft,
             onTap: () {
               Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (_) => const QuotePage(),
-              ),
-            );
+                context,
+                MaterialPageRoute(
+                  builder: (_) => const QuotePage(),
+                ),
+              );
             },
           ),
         ),
@@ -676,11 +672,11 @@ class _DailyCards extends StatelessWidget {
             iconBg: AppColors.amberSoft,
             onTap: () {
               Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (_) => const FactPage(),
-              ),
-            );
+                context,
+                MaterialPageRoute(
+                  builder: (_) => const FactPage(),
+                ),
+              );
             },
           ),
         ),
@@ -791,7 +787,7 @@ class _QuickAccess extends StatelessWidget {
     const _QAItem('Results',  'Check results',  AppColors.violet,  AppColors.violetSoft,
       Icons.emoji_events_outlined),
     const _QAItem('QP',       'Past papers',    AppColors.teal,    AppColors.tealSoft,
-      Icons.description_outlined, url: 'https://myarivon.in/question-papers'),
+      Icons.description_outlined, url: 'myarivon.in/question-papers'),
     const _QAItem('Syllabus', 'R2021',          AppColors.amber,   AppColors.amberSoft,
       Icons.format_align_left_rounded),
     const _QAItem('GPA Calc', 'Calculate',      AppColors.success, AppColors.successSoft,
@@ -824,54 +820,53 @@ class _QuickAccess extends StatelessWidget {
           children: _items.map((item) => GestureDetector(
             onTap: () {
               if (item.label == 'Results') {
-                  Navigator.push(
-                   ctx,
-                   MaterialPageRoute(
+                Navigator.push(
+                  ctx,
+                  MaterialPageRoute(
                     builder: (_) => const ResultsPage(),
-                   ),
-                  );
-              return;
+                  ),
+                );
+                return;
               }
               if (item.label == 'Alerts') {
-                 Navigator.push(
-                   ctx,
-                   MaterialPageRoute(
+                Navigator.push(
+                  ctx,
+                  MaterialPageRoute(
                     builder: (_) => NotificationsPage(),
-                   ),
-                  );
-              return;
-               }
+                  ),
+                );
+                return;
+              }
               if (item.label == 'Notes') {
-                 Navigator.push(
-                   ctx,
+                Navigator.push(
+                  ctx,
                   MaterialPageRoute(
                     builder: (_) => const DepartmentsPage(),
                   ),
-                 );
-              return;
+                );
+                return;
               }
-              
-                if (item.label == 'Syllabus') {
-                 Navigator.push(
-                   ctx,
+              if (item.label == 'Syllabus') {
+                Navigator.push(
+                  ctx,
                   MaterialPageRoute(
                     builder: (_) => const SyllabusPage(),
                   ),
-                 );
-              return;
-                }
+                );
+                return;
+              }
 
-             if (item.url != null) {
-                 Navigator.of(ctx).push(
-                    MaterialPageRoute(
-                       builder: (_) => WebViewScreen(
-                         title: item.label,
-                         url: 'https://${item.url}',
-                       ),
+              if (item.url != null) {
+                Navigator.of(ctx).push(
+                  MaterialPageRoute(
+                    builder: (_) => WebViewScreen(
+                      title: item.label,
+                      url: '${item.url}',
                     ),
+                  ),
                 );
               }
-          },
+            },
             child: Container(
               decoration: BoxDecoration(
                 color: cardBg,
