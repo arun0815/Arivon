@@ -292,6 +292,7 @@ return 'Still awake? That\'s between you and your sleep schedule 👀';
   }
 }
 
+
 // ── Semester card ─────────────────────────────────────────────────────────────
 class _SemesterCard extends StatelessWidget {
   @override
@@ -299,92 +300,139 @@ class _SemesterCard extends StatelessWidget {
     final profile = context.watch<ProfileProvider>().profile;
 
     return Container(
-      padding: const EdgeInsets.all(20),
+      height: 200,
       decoration: BoxDecoration(
         gradient: const LinearGradient(
-          begin: Alignment.topLeft, end: Alignment.bottomRight,
-          colors: [Color(0xFF1D4ED8), Color(0xFF2563EB)],
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: [Color(0xFF1D4ED8), Color(0xFF0A84FF)],
         ),
-        borderRadius: BorderRadius.circular(22),
+        borderRadius: BorderRadius.circular(28),
         boxShadow: [
           BoxShadow(
-            color: const Color(0xFF1D4ED8).withOpacity(0.3),
-            blurRadius: 24, offset: const Offset(0, 10),
+            color: const Color(0xFF1D4ED8).withOpacity(0.35),
+            blurRadius: 24,
+            offset: const Offset(0, 10),
           ),
         ],
       ),
-      child: Stack(
-        children: [
-          Positioned(
-            top: -40, right: -30,
-            child: Container(
-              width: 150, height: 150,
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                color: Colors.white.withOpacity(0.06),
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(28),
+        child: Stack(
+          children: [
+            // Soft background circles
+            Positioned(
+              top: -30,
+              right: -20,
+              child: Container(
+                width: 160,
+                height: 160,
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: Colors.white.withOpacity(0.10),
+                ),
               ),
             ),
-          ),
-          Positioned(
-            bottom: -15, right: 70,
-            child: Container(
-              width: 90, height: 90,
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                color: Colors.white.withOpacity(0.05),
+            Positioned(
+              bottom: -50,
+              right: 40,
+              child: Container(
+                width: 150,
+                height: 150,
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: Colors.white.withOpacity(0.07),
+                ),
               ),
             ),
-          ),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
+
+            // Illustration (bottom-right)
+            Positioned(
+              right: 0,
+              bottom: 0,
+              child: Image.asset(
+                'assets/images/human.png',
+                height: 150,
+                fit: BoxFit.contain,
+                errorBuilder: (_, __, ___) => const SizedBox.shrink(),
+              ),
+            ),
+
+            // Content
+            Padding(
+              padding: const EdgeInsets.fromLTRB(20, 20, 20, 18),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Container(
-                    width: 44, height: 44,
-                    decoration: BoxDecoration(
-                      color: Colors.white.withOpacity(0.15),
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    child: const Icon(Icons.school_rounded,
-                        color: Colors.white, size: 22),
-                  ),
-                  const SizedBox(width: 12),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
+                  Row(
                     children: [
-                      Text('CURRENT SEMESTER',
-                        style: TextStyle(fontSize: 10, fontWeight: FontWeight.w700,
-                          color: Colors.white.withOpacity(0.6), letterSpacing: 1)),
-                      const SizedBox(height: 2),
-                      Text(profile?.semester ?? '—',
-                        style: const TextStyle(fontSize: 18,
-                          fontWeight: FontWeight.w800, color: Colors.white,
-                          letterSpacing: -0.4)),
+                      Container(
+                        width: 52,
+                        height: 52,
+                        decoration: BoxDecoration(
+                          color: Colors.white.withOpacity(0.18),
+                          borderRadius: BorderRadius.circular(16),
+                        ),
+                        child: const Icon(Icons.school_rounded,
+                            color: Colors.white, size: 26),
+                      ),
+                      const SizedBox(width: 14),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            'CURRENT SEMESTER',
+                            style: TextStyle(
+                              fontSize: 10,
+                              fontWeight: FontWeight.w700,
+                              letterSpacing: 1.2,
+                              color: Colors.white.withOpacity(0.7),
+                            ),
+                          ),
+                          const SizedBox(height: 2),
+                          Text(
+                            profile?.semester ?? '—',
+                            style: const TextStyle(
+                              fontSize: 26,
+                              fontWeight: FontWeight.w800,
+                              color: Colors.white,
+                              letterSpacing: -0.6,
+                            ),
+                          ),
+                        ],
+                      ),
                     ],
+                  ),
+                  const Spacer(),
+                  Container(
+                    height: 1,
+                    color: Colors.white.withOpacity(0.18),
+                    margin: const EdgeInsets.only(bottom: 12, right: 8),
+                  ),
+                  // Keep rows clear of the illustration
+                  Padding(
+                    padding: const EdgeInsets.only(right: 96),
+                    child: Column(
+                      children: [
+                        _InfoRow(
+                          icon: Icons.account_tree_outlined,
+                          label: 'Department',
+                          value: profile?.department ?? '—',
+                        ),
+                        const SizedBox(height: 10),
+                        _InfoRow(
+                          icon: Icons.location_city_rounded,
+                          label: 'Institute',
+                          value: profile?.institute ?? '—',
+                        ),
+                      ],
+                    ),
                   ),
                 ],
               ),
-              const SizedBox(height: 18),
-              Container(
-                height: 1,
-                color: Colors.white.withOpacity(0.15),
-                margin: const EdgeInsets.only(bottom: 14),
-              ),
-              _InfoRow(
-                icon: Icons.account_tree_outlined,
-                label: 'Department',
-                value: profile?.department ?? '—',
-              ),
-              const SizedBox(height: 10),
-              _InfoRow(
-                icon: Icons.location_city_rounded,
-                label: 'Institute',
-                value: profile?.institute ?? '—',
-              ),
-            ],
-          ),
-        ],
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -393,28 +441,40 @@ class _SemesterCard extends StatelessWidget {
 class _InfoRow extends StatelessWidget {
   final IconData icon;
   final String label, value;
-  const _InfoRow({required this.icon, required this.label, required this.value});
+  const _InfoRow(
+      {required this.icon, required this.label, required this.value});
 
   @override
   Widget build(BuildContext context) {
     return Row(
       children: [
-        Icon(icon, size: 16, color: Colors.white.withOpacity(0.6)),
+        Icon(icon, size: 16, color: Colors.white.withOpacity(0.7)),
         const SizedBox(width: 8),
-        Text(label,
-          style: TextStyle(fontSize: 12, color: Colors.white.withOpacity(0.6))),
-        const Spacer(),
-        Flexible(
-          child: Text(value,
-            textAlign: TextAlign.right,
+        SizedBox(
+          width: 72,
+          child: Text(
+            label,
+            style: TextStyle(
+                fontSize: 12, color: Colors.white.withOpacity(0.7)),
+          ),
+        ),
+        Expanded(
+          child: Text(
+            value,
             overflow: TextOverflow.ellipsis,
-            style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w700,
-              color: Colors.white)),
+            style: const TextStyle(
+              fontSize: 13,
+              fontWeight: FontWeight.w700,
+              color: Colors.white,
+            ),
+          ),
         ),
       ],
     );
   }
 }
+
+
 
 class _DailyCards extends StatelessWidget {
   const _DailyCards();
