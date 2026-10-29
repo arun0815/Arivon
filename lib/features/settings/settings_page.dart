@@ -152,7 +152,7 @@ class _SettingsPageState extends State<SettingsPage> {
             _AboutRow('Version',   '1.0.0',          isDark),
             _AboutRow('Build',     '2025.01',         isDark),
             _AboutRow('Developer', 'Arivon Team',     isDark),
-            _AboutRow('Contact',   'support@arivon.app', isDark),
+            _AboutRow('Contact',   'support@myarivon.in', isDark),
             const SizedBox(height: 12),
             Text(
               'Smart Academic Companion.',
