@@ -58,13 +58,13 @@ class _PrivacyContent extends StatelessWidget {
         _Section(
           title: '2. How We Use Your Information',
           body:
-              'We use your information solely to provide and improve EduHub\'s features — including personalizing your academic dashboard, saving your profile, and displaying relevant content. We do not sell your data to third parties.',
+              'We use your information solely to provide and improve Arivon\'s features — including personalizing your academic dashboard, saving your profile, and displaying relevant content. We do not sell your data to third parties.',
         ),
 
         _Section(
           title: '3. Google Sign-In',
           body:
-              'EduHub uses Google Sign-In for authentication. By signing in, you authorize us to access your basic Google profile (name, email, profile photo). We do not access your Google Drive, Gmail, or any other Google services.',
+              'Arivon uses Google Sign-In for authentication. By signing in, you authorize us to access your basic Google profile (name, email, profile photo). We do not access your Google Drive, Gmail, or any other Google services.',
         ),
 
         _Section(
@@ -106,7 +106,7 @@ class _PrivacyContent extends StatelessWidget {
         _Section(
           title: '10. Contact Us',
           body:
-              'If you have any questions or concerns about this Privacy Policy or how we handle your data, please contact us at privacy@eduhub.app.',
+              'If you have any questions or concerns about this Privacy Policy or how we handle your data, please contact us at privacy@myarivon.in.',
         ),
       ],
     );
