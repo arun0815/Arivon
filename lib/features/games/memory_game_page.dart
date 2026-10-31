@@ -337,13 +337,11 @@ class _MemoryGamePageState extends State<MemoryGamePage> {
       if (data == null) return;
       final bytes = data.buffer.asUint8List();
 
-      await SharePlus.instance.share(
-        ShareParams(
-          text: message,
-          files: [XFile.fromData(bytes, mimeType: 'image/png')],
-          fileNameOverrides: ['arivon_memory_score.png'],
-          sharePositionOrigin: origin,
-        ),
+      await Share.shareXFiles(
+        [XFile.fromData(bytes, mimeType: 'image/png')],
+        text: message,
+        fileNameOverrides: ['arivon_memory_score.png'],
+        sharePositionOrigin: origin,
       );
     } catch (_) {
       if (!mounted) return;
@@ -361,7 +359,7 @@ class _MemoryGamePageState extends State<MemoryGamePage> {
       if (ok) return;
     } catch (_) {}
     // Fallback: normal share sheet (WhatsApp is listed there too)
-    await SharePlus.instance.share(ShareParams(text: message));
+    await Share.share(message);
   }
 
   void _showWinDialog(bool isBest) {
