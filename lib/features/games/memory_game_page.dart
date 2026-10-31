@@ -4,6 +4,15 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../../core/theme/app_colors.dart';
 
+// Put this file in a folder next to home/ and profile/,
+// e.g. features/games/memory_game_page.dart, so the import above matches.
+
+class _Face {
+  final IconData icon;
+  final Color color;
+  const _Face(this.icon, this.color);
+}
+
 class _GameCard {
   final IconData icon;
   final Color color;
@@ -22,16 +31,16 @@ class MemoryGamePage extends StatefulWidget {
 class _MemoryGamePageState extends State<MemoryGamePage> {
   static const _bestKey = 'memory_game_best_moves';
 
-  static const _faces = <IconData, Color>{
-    Icons.settings: Color(0xFF2563EB),
-    Icons.bolt: Color(0xFFF59E0B),
-    Icons.engineering: Color(0xFF7C3AED),
-    Icons.science: Color(0xFF0D9488),
-    Icons.calculate: Color(0xFF16A34A),
-    Icons.memory: Color(0xFFE11D48),
-    Icons.rocket_launch: Color(0xFF0EA5E9),
-    Icons.menu_book: Color(0xFFEA580C),
-  };
+  static const _faces = <_Face>[
+    _Face(Icons.settings, Color(0xFF2563EB)),
+    _Face(Icons.bolt, Color(0xFFF59E0B)),
+    _Face(Icons.engineering, Color(0xFF7C3AED)),
+    _Face(Icons.science, Color(0xFF0D9488)),
+    _Face(Icons.calculate, Color(0xFF16A34A)),
+    _Face(Icons.memory, Color(0xFFE11D48)),
+    _Face(Icons.rocket_launch, Color(0xFF0EA5E9)),
+    _Face(Icons.menu_book, Color(0xFFEA580C)),
+  ];
 
   late List<_GameCard> _cards;
   int? _first;
@@ -64,12 +73,14 @@ class _MemoryGamePageState extends State<MemoryGamePage> {
   void _newGame() {
     _timer?.cancel();
     _timer = null;
+
     final cards = <_GameCard>[];
-    _faces.forEach((icon, color) {
-      cards.add(_GameCard(icon, color));
-      cards.add(_GameCard(icon, color));
-    });
+    for (final f in _faces) {
+      cards.add(_GameCard(f.icon, f.color));
+      cards.add(_GameCard(f.icon, f.color));
+    }
     cards.shuffle(Random());
+
     setState(() {
       _cards = cards;
       _first = null;
