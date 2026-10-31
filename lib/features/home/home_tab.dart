@@ -8,7 +8,7 @@ import '../../../core/models/update_models.dart';
 import '../webview/webview_screen.dart';
 import '../notifications/notifications_page.dart';
 import '../profile/profile_tab.dart';
-import '../quote/quote_page.dart';
+import '../games/memory_game_page.dart';
 import '../facts/fact_page.dart';
 import '../results/results_page.dart';
 import '../notes/departments_page.dart';
@@ -633,7 +633,7 @@ class _MarqueeTextState extends State<_MarqueeText> {
   }
 }
 
-// ── Daily cards ───────────────────────────────────────────────────────────────
+// ── Daily cards (Game + Did You Know) ─────────────────────────────────────────
 class _DailyCards extends StatelessWidget {
   const _DailyCards();
 
@@ -646,15 +646,15 @@ class _DailyCards extends StatelessWidget {
         Expanded(
           child: _MiniCard(
             isDark: isDark,
-            title: 'Today Quote',
-            icon: Icons.format_quote_rounded,
+            title: 'Play Game',
+            icon: Icons.sports_esports_outlined,
             iconColor: AppColors.violet,
             iconBg: AppColors.violetSoft,
             onTap: () {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (_) => const QuotePage(),
+                  builder: (_) => const MemoryGamePage(),
                 ),
               );
             },
@@ -786,8 +786,9 @@ class _QuickAccess extends StatelessWidget {
       Icons.book_outlined),
     const _QAItem('Results',  'Check results',  AppColors.violet,  AppColors.violetSoft,
       Icons.emoji_events_outlined),
+    // Full URL with https:// — WebView needs the scheme
     const _QAItem('QP',       'Past papers',    AppColors.teal,    AppColors.tealSoft,
-      Icons.description_outlined, url: 'myarivon.in/question-papers'),
+      Icons.description_outlined, url: 'https://myarivon.in/question-papers'),
     const _QAItem('Syllabus', 'R2021',          AppColors.amber,   AppColors.amberSoft,
       Icons.format_align_left_rounded),
     const _QAItem('GPA Calc', 'Calculate',      AppColors.success, AppColors.successSoft,
@@ -861,7 +862,7 @@ class _QuickAccess extends StatelessWidget {
                   MaterialPageRoute(
                     builder: (_) => WebViewScreen(
                       title: item.label,
-                      url: '${item.url}',
+                      url: item.url!,
                     ),
                   ),
                 );
@@ -930,6 +931,10 @@ class _RecentUpdatesState extends State<_RecentUpdates> {
     _future = _fetch();
   }
 
+  void _reload() {
+    setState(() => _future = _fetch());
+  }
+
   Future<List<UpdateItem>> _fetch() async {
     final res = await http
         .get(Uri.parse(updatesApiUrl))
@@ -980,24 +985,37 @@ class _RecentUpdatesState extends State<_RecentUpdates> {
         FutureBuilder<List<UpdateItem>>(
           future: _future,
           builder: (context, snapshot) {
+            // Loading → skeleton rows instead of a spinner
             if (snapshot.connectionState == ConnectionState.waiting) {
-              return const Padding(
-                padding: EdgeInsets.symmetric(vertical: 24),
-                child: Center(
-                    child: CircularProgressIndicator(strokeWidth: 2)),
+              return Column(
+                children: [
+                  _SkeletonRow(isDark: isDark),
+                  _SkeletonRow(isDark: isDark),
+                ],
               );
             }
 
-            if (snapshot.hasError || (snapshot.data?.isEmpty ?? true)) {
-              return Container(
-                padding: const EdgeInsets.all(16),
-                decoration: BoxDecoration(
-                  color: cardBg,
-                  borderRadius: BorderRadius.circular(14),
-                  border: Border.all(color: border),
-                ),
-                child: Text('No updates right now',
-                    style: TextStyle(fontSize: 12, color: textSec)),
+            // Failed to load → friendly message + retry
+            if (snapshot.hasError) {
+              return _UpdatesStateCard(
+                isDark: isDark,
+                icon: Icons.wifi_off_rounded,
+                color: AppColors.amber,
+                title: 'Couldn\'t load updates',
+                subtitle: 'Check your internet connection and try again.',
+                actionLabel: 'Retry',
+                onAction: _reload,
+              );
+            }
+
+            // Loaded but nothing to show
+            if (snapshot.data?.isEmpty ?? true) {
+              return _UpdatesStateCard(
+                isDark: isDark,
+                icon: Icons.check_circle_outline_rounded,
+                color: AppColors.success,
+                title: 'You\'re all caught up',
+                subtitle: 'No new updates right now. Check back later.',
               );
             }
 
@@ -1067,6 +1085,144 @@ class _RecentUpdatesState extends State<_RecentUpdates> {
           },
         ),
       ],
+    );
+  }
+}
+
+// ── Updates: empty / error card ───────────────────────────────────────────────
+class _UpdatesStateCard extends StatelessWidget {
+  final bool isDark;
+  final IconData icon;
+  final Color color;
+  final String title, subtitle;
+  final String? actionLabel;
+  final VoidCallback? onAction;
+
+  const _UpdatesStateCard({
+    required this.isDark,
+    required this.icon,
+    required this.color,
+    required this.title,
+    required this.subtitle,
+    this.actionLabel,
+    this.onAction,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final cardBg = isDark ? const Color(0xFF1E293B) : AppColors.white;
+    final border = isDark ? const Color(0xFF334155) : AppColors.border;
+    final textColor = isDark ? Colors.white : AppColors.text;
+    final textSec = isDark ? const Color(0xFF94A3B8) : AppColors.textSec;
+
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.fromLTRB(20, 22, 20, 20),
+      decoration: BoxDecoration(
+        color: cardBg,
+        borderRadius: BorderRadius.circular(20),
+        border: Border.all(color: border),
+      ),
+      child: Column(
+        children: [
+          Container(
+            width: 52,
+            height: 52,
+            decoration: BoxDecoration(
+              color: color.withOpacity(isDark ? 0.18 : 0.12),
+              shape: BoxShape.circle,
+            ),
+            child: Icon(icon, color: color, size: 26),
+          ),
+          const SizedBox(height: 12),
+          Text(title,
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                  fontSize: 14,
+                  fontWeight: FontWeight.w800,
+                  color: textColor,
+                  letterSpacing: -0.2)),
+          const SizedBox(height: 4),
+          Text(subtitle,
+              textAlign: TextAlign.center,
+              style: TextStyle(fontSize: 12, height: 1.4, color: textSec)),
+          if (actionLabel != null && onAction != null) ...[
+            const SizedBox(height: 14),
+            GestureDetector(
+              onTap: onAction,
+              child: Container(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 18, vertical: 9),
+                decoration: BoxDecoration(
+                  color: AppColors.primary,
+                  borderRadius: BorderRadius.circular(20),
+                ),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    const Icon(Icons.refresh_rounded,
+                        color: Colors.white, size: 16),
+                    const SizedBox(width: 6),
+                    Text(actionLabel!,
+                        style: const TextStyle(
+                            fontSize: 12.5,
+                            fontWeight: FontWeight.w700,
+                            color: Colors.white)),
+                  ],
+                ),
+              ),
+            ),
+          ],
+        ],
+      ),
+    );
+  }
+}
+
+// ── Updates: loading skeleton row ─────────────────────────────────────────────
+class _SkeletonRow extends StatelessWidget {
+  final bool isDark;
+  const _SkeletonRow({required this.isDark});
+
+  @override
+  Widget build(BuildContext context) {
+    final cardBg = isDark ? const Color(0xFF1E293B) : AppColors.white;
+    final border = isDark ? const Color(0xFF334155) : AppColors.border;
+    final bar = isDark ? const Color(0xFF334155) : const Color(0xFFE2E8F0);
+
+    Widget block(double w, double h, double r) => Container(
+          width: w,
+          height: h,
+          decoration: BoxDecoration(
+            color: bar,
+            borderRadius: BorderRadius.circular(r),
+          ),
+        );
+
+    return Container(
+      margin: const EdgeInsets.only(bottom: 9),
+      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 13),
+      decoration: BoxDecoration(
+        color: cardBg,
+        borderRadius: BorderRadius.circular(14),
+        border: Border.all(color: border),
+      ),
+      child: Row(
+        children: [
+          block(36, 36, 10),
+          const SizedBox(width: 12),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                block(140, 10, 5),
+                const SizedBox(height: 8),
+                block(double.infinity, 8, 4),
+              ],
+            ),
+          ),
+        ],
+      ),
     );
   }
 }
